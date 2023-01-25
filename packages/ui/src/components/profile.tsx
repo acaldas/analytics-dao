@@ -20,9 +20,7 @@ const Profile: React.FC = () => {
     useSwitchNetwork();
   return (
     <div>
-      {" "}
       <div>
-        {" "}
         {isConnected ? (
           <div>
             Connected to {address}

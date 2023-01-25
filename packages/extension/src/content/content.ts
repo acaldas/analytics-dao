@@ -37,7 +37,6 @@ const init = async () => {
   if (!Array.isArray(data.events)) {
     await chrome.storage.local.set({ events: [] });
   }
-  console.log(JSON.stringify(data.events[0]));
 
   // track initial page
   analytics.page({ url: location.href });
