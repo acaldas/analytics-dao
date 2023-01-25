@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "compilerOptions": {
+    "composite": true,
+    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "files": ["index.ts"],
+  "references": [{ "path": "../shared" }]
+}

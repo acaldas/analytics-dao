@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// const event = {
+//   anonymousId: "e680d336-a4b8-4037-8376-ee1966dae70b",
+//   meta: {
+//     hasCallback: true,
+//     rid: "98b0b8d5-3ce1-413f-a52f-956e05300916",
+//     ts: 1673736279435,
+//   },
+//   options: {},
+//   properties: {
+//     hash: "",
+//     height: 1001,
+//     path: "/",
+//     search: "",
+//     title: "Create Next App",
+//     url: "http://localhost:3000/",
+//     width: 1920,
+//   },
+//   type: "page",
+//   userId: "d079444f-63d1-479d-bae8-0b3000070fa0",
+// };
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id          Int                       @default(autoincrement())
+  userId      String                    @id @unique
+  address     String?
+  publicKey   String?
+  eventFiles  UserEventsFile[]
+  eventsCount UserEventsFileHostCount[]
+}
+
+model Host {
+  id          Int                       @id @default(autoincrement())
+  name        String                    @unique
+  eventFiles  UserEventsFile[]
+  eventsCount UserEventsFileHostCount[]
+}
+
+model UserEventsFile {
+  id          Int                       @default(autoincrement())
+  cId         String                    @id @unique
+  dealId      String?                   @unique
+  size        Int
+  hash        String
+  userId      String
+  user        User                      @relation(fields: [userId], references: [userId])
+  hosts       Host[]
+  eventsCount UserEventsFileHostCount[]
+}
+
+model UserEventsFileHostCount {
+  id             Int            @id @default(autoincrement())
+  cId            String         
+  userEventsFile UserEventsFile @relation(fields: [cId], references: [cId])
+  hostName       String
+  host           Host           @relation(fields: [hostName], references: [name])
+  userId         String
+  user           User           @relation(fields: [userId], references: [userId])
+  count          Int
+}
+
+// model Event {
+//   id        Int     @id @default(autoincrement())
+//   name     String
+//   content   String?
+//   published Boolean @default(false)
+//   file    UserEventsFile?   @relation(fields: [fileId], references: [id])
+//   fileId Int
+//   userId  String?
+//   timestamp Int
+// }

@@ -1,0 +1,19 @@
+{
+  "name": "analytics",
+  "version": "1.0.0",
+  "author": "acaldas <acaldas.dev@gmail.com>",
+  "dependencies": {
+    "typescript": "^4.9.4"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "packageManager": "yarn@1.22.19",
+  "private": true,
+  "scripts": {
+    "dao": "yarn workspace dao dev",
+    "extension": "yarn workspace extension dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

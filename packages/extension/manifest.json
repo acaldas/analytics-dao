@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Hello CRX!",
+  "description": "Base Level Extension",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "content_scripts": [
+    {
+      "js": ["src/content/content.ts"],
+      "matches": ["*://*/*"]
+    }
+  ],
+  "background": {
+    "service_worker": "src/background/tab-listener.ts",
+    "type": "module"
+  },
+  "permissions": ["storage", "unlimitedStorage", "webNavigation"],
+  "host_permissions": ["http://localhost:3000/*"],
+  "externally_connectable": {
+    "matches": ["http://localhost:3000/*"]
+  }
+}
