@@ -26,7 +26,12 @@ export type ExtensionEvent = {
   userId: string;
 };
 
-export type UserFile = {
+export type ExtensionStorage = {
+  events: ExtensionEvent[];
+  userId: string;
+};
+
+export type LighthouseFile = {
   name: string;
   hash: string;
   size: string | number;

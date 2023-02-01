@@ -21,6 +21,9 @@ const reset = () => {
 };
 
 const init = async () => {
+  // initialize tracking
+  let tracking = (await chrome.storage.local.get("tracking")) || false;
+
   // initialize user id
   const storageUserId = (await chrome.storage.local.get("userId")).userId;
   const currentUserId: string = analytics.user("userId");
@@ -47,15 +50,22 @@ const init = async () => {
     sender,
     sendResponse
   ) {
-    if (request.message === "history-update") {
-      // check if updated page is new
-      const currentUrl = analytics.getState("page").last?.properties?.url;
-      if (request.url !== currentUrl) {
-        analytics.page({ url: request.url });
-      }
-    } else {
-      console.log(request);
-      sendResponse({ message: "ola" });
+    switch (request.message) {
+      case "history-update":
+        // check if updated page is new
+        const currentUrl = analytics.getState("page").last?.properties?.url;
+        if (request.url !== currentUrl) {
+          analytics.page({ url: request.url });
+        }
+        break;
+      case "update-tracking":
+        console.log("UPDATE TRACKING", request);
+        tracking = request.payload;
+        chrome.storage.local.set({ tracking: request.payload });
+        break;
+      default:
+        console.log(request);
+        sendResponse({ message: "ola" });
     }
   });
 };

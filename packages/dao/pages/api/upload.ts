@@ -1,9 +1,19 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { ethers } from "ethers";
 import lighthouse from "@lighthouse-web3/sdk";
-import { indexUserEvents, upsertUser, validateUserEvents } from "@analytics/db";
-import { ExtensionEvent, extensionEventToEvent } from "@analytics/shared";
+import {
+  fetchUserUploads,
+  indexUserEvents,
+  validateUserEvents,
+} from "@analytics/db";
+import {
+  ExtensionEvent,
+  extensionEventToEvent,
+  getHostEventsCount,
+} from "@analytics/shared";
+import { getUserTokenIds, mintUserFile } from "@analytics/contracts";
 import { ApiError } from "next/dist/server/api-utils";
+import withIronSessionApiRoute from "hooks/withIronSessionApiRoute";
 
 const sign_auth_message = async (publicKey: string, privateKey: string) => {
   const provider = new ethers.providers.JsonRpcProvider();
@@ -31,36 +41,45 @@ const uploadEncrypted = async (payload: string) => {
   return response;
 };
 
-// const event = {
-//   anonymousId: "e680d336-a4b8-4037-8376-ee1966dae70b",
-//   meta: {
-//     hasCallback: true,
-//     rid: "98b0b8d5-3ce1-413f-a52f-956e05300916",
-//     ts: 1673736279435,
-//   },
-//   options: {},
-//   properties: {
-//     hash: "",
-//     height: 1001,
-//     path: "/",
-//     search: "",
-//     title: "Create Next App",
-//     url: "http://localhost:3000/",
-//     width: 1920,
-//   },
-//   type: "page",
-//   userId: "d079444f-63d1-479d-bae8-0b3000070fa0",
-// };
-
-export default async function handler(
+async function getUserUploads(
   request: NextApiRequest,
   response: NextApiResponse
 ) {
-  const userId: string = request.body.userId;
-  const extensionEvents: ExtensionEvent[] = request.body.events;
+  try {
+    const userAddress = request.session.siwe!.address;
+    const tokenIds = await getUserTokenIds(userAddress);
+    const uploads = await fetchUserUploads(tokenIds);
+    response.status(200).json(uploads);
+  } catch (error) {
+    console.error(error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+export default withIronSessionApiRoute(async function (
+  request: NextApiRequest,
+  response: NextApiResponse
+) {
+  const userAddress = request.session.siwe?.address;
+  if (!userAddress) {
+    throw new ApiError(403, "Forbidden");
+  }
+
+  if (request.method === "GET") {
+    return getUserUploads(request, response);
+  }
+
+  const body = request.body;
+  const userId: string = body.userId;
+  const extensionEvents: ExtensionEvent[] = body.events;
 
   try {
-    if (!userId || !extensionEvents || !extensionEvents.length) {
+    if (
+      !userAddress ||
+      !userId ||
+      !extensionEvents ||
+      !extensionEvents.length
+    ) {
       throw new ApiError(400, "Invalid request");
     }
     const events = extensionEvents.map(extensionEventToEvent);
@@ -69,19 +88,37 @@ export default async function handler(
     }
 
     const file = await uploadEncrypted(JSON.stringify(events));
-
     if (file.error) {
       console.error(file.error);
       throw new ApiError(500, "File upload failed");
     }
 
-    const result = await indexUserEvents(userId, events, {
-      name: file.data.Name,
-      hash: file.data.Hash,
-      size: file.data.Size,
-    });
+    const metadata = {
+      description: "LytDao user file",
+      userId,
+      cId: file.data.Name,
+      hosts: getHostEventsCount(events),
+    };
 
-    console.log(result);
+    const metadataFile = await uploadEncrypted(JSON.stringify(metadata));
+
+    const tokenId = await mintUserFile(userAddress, metadataFile.data.Name);
+    if (tokenId === undefined) {
+      throw new ApiError(500, "File mint failed");
+    }
+
+    const result = await indexUserEvents(
+      userId,
+      tokenId,
+      events,
+      {
+        name: file.data.Name,
+        hash: file.data.Hash,
+        size: file.data.Size,
+      },
+      metadataFile.data.Name
+    );
+
     response.status(200).json({ status: "success", result });
   } catch (error) {
     if (error instanceof ApiError) {
@@ -91,4 +128,12 @@ export default async function handler(
       response.status(500).json({ error: "Internal Server Error" });
     }
   }
-}
+});
+
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "4mb",
+    },
+  },
+};

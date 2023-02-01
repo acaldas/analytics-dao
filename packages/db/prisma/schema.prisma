@@ -50,7 +50,8 @@ model Host {
 
 model UserEventsFile {
   id          Int                       @default(autoincrement())
-  cId         String                    @id @unique
+  tokenId     Int                       @id @unique
+  cId         String                    @unique
   dealId      String?                   @unique
   size        Int
   hash        String
@@ -58,12 +59,14 @@ model UserEventsFile {
   user        User                      @relation(fields: [userId], references: [userId])
   hosts       Host[]
   eventsCount UserEventsFileHostCount[]
+  metadataCId String                    @unique
+  timestamp   DateTime                  @default(now())
 }
 
 model UserEventsFileHostCount {
   id             Int            @id @default(autoincrement())
-  cId            String         
-  userEventsFile UserEventsFile @relation(fields: [cId], references: [cId])
+  tokenId        Int
+  userEventsFile UserEventsFile @relation(fields: [tokenId], references: [tokenId])
   hostName       String
   host           Host           @relation(fields: [hostName], references: [name])
   userId         String

@@ -2,24 +2,25 @@ import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { Profile } from "@analytics/ui";
+import { ExtensionStorage } from "@analytics/shared/types";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const [data, setData] = useState({});
+  const [recording, setRecording] = useState<boolean | undefined>();
+  const [data, setData] = useState<ExtensionStorage>();
 
   useEffect(() => {
     chrome.storage?.local.get().then((data) => setData(data));
   }, []);
 
-  const uploadEvents = () => {
-    fetch("http://localhost:3000/api/upload", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then((response) => response.json().then(console.log));
-  };
+  useEffect(() => {
+    if (recording !== undefined) {
+      chrome.runtime.sendMessage({
+        message: "update-tracking",
+        tracking: recording,
+      });
+    }
+  }, [recording]);
+
   return (
     <div className="App">
       <div>
@@ -30,9 +31,17 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>
+        <button
+          onClick={() => {
+            setRecording((recording) => !recording);
+          }}
+        >
+          {recording ? "Rec" : "Paused"}
+        </button>
+      </h1>
       <div className="card">
-        <button onClick={() => uploadEvents()}>count is {count}</button>
+        <button>count is {recording}</button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
@@ -43,7 +52,6 @@ function App() {
       <a href="http://localhost:3000/" target="_blank">
         Upload
       </a>
-      <Profile />
     </div>
   );
 }

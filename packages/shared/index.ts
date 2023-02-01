@@ -16,4 +16,12 @@ export function extensionEventToEvent(event: ExtensionEvent): Event {
   }
 }
 
+export function getHostEventsCount(events: Event[]) {
+  return events.reduce((acc, curr) => {
+    const count = acc[curr.properties.host] || 0;
+    acc[curr.properties.host] = count + 1;
+    return acc;
+  }, new Map<string, number>());
+}
+
 export { Event, ExtensionEvent };

@@ -13,7 +13,19 @@
     "dao": "yarn workspace dao dev",
     "extension": "yarn workspace extension dev"
   },
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@openzeppelin/contracts",
+      "**/@zondax/filecoin-solidity",
+      "**/@zondax/filecoin-solidity-mock-api"
+    ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.4"
+  }
 }

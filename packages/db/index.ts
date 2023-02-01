@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { Event } from "@analytics/shared";
-import { UserFile } from "@analytics/shared/types";
+import { Event, getHostEventsCount } from "@analytics/shared";
+import { LighthouseFile } from "@analytics/shared/types";
+export * as db from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -33,24 +34,21 @@ export async function createHosts(newHosts: Prisma.HostCreateManyInput[]) {
 export async function validateUserEvents(userId: string, events: Event[]) {
   return true;
 }
+
 export async function indexUserEvents(
   userId: string,
+  tokenId: number,
   events: Event[],
-  file: UserFile
+  file: LighthouseFile,
+  metadataCId: string
 ) {
-  const hosts = events.reduce((acc, curr) => {
-    const count = acc[curr.properties.host] || 0;
-    acc[curr.properties.host] = count + 1;
-    return acc;
-  }, new Map<string, number>());
-  console.log(
-    file.name,
-    await prisma.userEventsFile.findUnique({ where: { cId: file.name } })
-  );
+  const hosts = getHostEventsCount(events);
 
   const userFile = await prisma.userEventsFile.create({
     data: {
+      tokenId,
       cId: file.name,
+      metadataCId,
       user: {
         connectOrCreate: {
           where: {
@@ -65,6 +63,7 @@ export async function indexUserEvents(
           create: { name: host },
         })),
       },
+
       size: +file.size,
       hash: file.hash,
       eventsCount: {
@@ -79,14 +78,32 @@ export async function indexUserEvents(
     },
   });
 
-  // const eventsCount = await prisma.userEventsFileHostCount.createMany({
-  //   data: Object.keys(hosts).map((hostName) => ({
-  //     cId: userFile.cId,
-  //     hostName,
-  //     userId,
-  //     count: hosts[hostName],
-  //   })),
-  // });
-  // console.log(eventsCount);
   return userFile;
+}
+
+export async function fetchHostEventsCount() {
+  return prisma.userEventsFileHostCount.groupBy({
+    by: ["hostName", "count"],
+    orderBy: {
+      count: "desc",
+    },
+    take: 10,
+  });
+}
+
+export async function fetchUserUploads(tokenIds: number[]) {
+  const result = await prisma.userEventsFile.findMany({
+    where: {
+      tokenId: { in: tokenIds },
+    },
+    include: {
+      eventsCount: {
+        orderBy: { count: "desc" },
+      },
+    },
+    orderBy: {
+      tokenId: "desc",
+    },
+  });
+  return result;
 }
