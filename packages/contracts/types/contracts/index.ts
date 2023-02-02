@@ -4,4 +4,5 @@
 export type { ERC721UserFile } from "./ERC721UserFile";
 export type { Lock } from "./Lock";
 export type { UserFile } from "./UserFile";
+export type { UserFileAccess } from "./UserFileAccess";
 export type { UserFileFactory } from "./UserFileFactory";

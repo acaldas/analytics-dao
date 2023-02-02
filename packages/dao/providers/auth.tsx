@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import { SiweMessage } from "siwe";
-import { useAccount, useNetwork, useSignMessage } from "wagmi";
+import { useAccount, useDisconnect, useNetwork, useSignMessage } from "wagmi";
 
 interface IAuthContext {
   address?: string;
@@ -8,12 +8,14 @@ interface IAuthContext {
   loggedIn: boolean;
   walletConnected: boolean;
   setAddress: (address: string) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const { isConnected } = useAccount();
+  const { disconnectAsync } = useDisconnect();
   const [address, setAddress] = useState<string>();
 
   useEffect(() => {
@@ -31,12 +33,20 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("focus", handler);
   }, []);
 
+  async function logout() {
+    await fetch("/api/auth/logout");
+    const test = await disconnectAsync();
+    console.log(test);
+    setAddress(undefined);
+  }
+
   const authValue: IAuthContext = useMemo(
     () => ({
       walletConnected: isConnected,
       address,
       setAddress,
       loggedIn: !!address,
+      logout,
     }),
     [isConnected, address]
   );

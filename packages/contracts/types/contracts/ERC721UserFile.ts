@@ -9,6 +9,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -30,9 +31,16 @@ import type {
 export interface ERC721UserFileInterface extends utils.Interface {
   functions: {
     "_setDealId(uint256,uint64)": FunctionFragment;
+    "_withdraw()": FunctionFragment;
+    "addUserFileAccess(uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "exists(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getHostPrice(bytes)": FunctionFragment;
+    "getUserFilePrice(uint256)": FunctionFragment;
+    "getUserFilesPrice(uint256[])": FunctionFragment;
+    "hasUserFileAccess(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(address,string)": FunctionFragment;
     "name()": FunctionFragment;
@@ -42,6 +50,8 @@ export interface ERC721UserFileInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setHostEventPrice(bytes,uint256)": FunctionFragment;
+    "setUserFileEventCount(uint256,bytes[],uint256[])": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -56,9 +66,16 @@ export interface ERC721UserFileInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "_setDealId"
+      | "_withdraw"
+      | "addUserFileAccess"
       | "approve"
       | "balanceOf"
+      | "exists"
       | "getApproved"
+      | "getHostPrice"
+      | "getUserFilePrice"
+      | "getUserFilesPrice"
+      | "hasUserFileAccess"
       | "isApprovedForAll"
       | "mint"
       | "name"
@@ -68,6 +85,8 @@ export interface ERC721UserFileInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setHostEventPrice"
+      | "setUserFileEventCount"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -83,6 +102,11 @@ export interface ERC721UserFileInterface extends utils.Interface {
     functionFragment: "_setDealId",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "_withdraw", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "addUserFileAccess",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -92,7 +116,27 @@ export interface ERC721UserFileInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "exists",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getApproved",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getHostPrice",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getUserFilePrice",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getUserFilesPrice",
+    values: [PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasUserFileAccess",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
@@ -135,6 +179,18 @@ export interface ERC721UserFileInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setHostEventPrice",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setUserFileEventCount",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<BigNumberish>[]
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -173,10 +229,32 @@ export interface ERC721UserFileInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(functionFragment: "_setDealId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "_withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "addUserFileAccess",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getHostPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getUserFilePrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getUserFilesPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hasUserFileAccess",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -201,6 +279,14 @@ export interface ERC721UserFileInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setHostEventPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setUserFileEventCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -235,17 +321,32 @@ export interface ERC721UserFileInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "AddUserFileAccess(uint256,address,uint256)": EventFragment;
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "AddUserFileAccess"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
+
+export interface AddUserFileAccessEventObject {
+  tokenId: BigNumber;
+  account: string;
+  price: BigNumber;
+}
+export type AddUserFileAccessEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  AddUserFileAccessEventObject
+>;
+
+export type AddUserFileAccessEventFilter =
+  TypedEventFilter<AddUserFileAccessEvent>;
 
 export interface ApprovalEventObject {
   owner: string;
@@ -328,6 +429,15 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    _withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    addUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -339,10 +449,35 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    exists(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getHostPrice(
+      _host: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getUserFilesPrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    hasUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -387,6 +522,19 @@ export interface ERC721UserFile extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setHostEventPrice(
+      _host: PromiseOrValue<BytesLike>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setUserFileEventCount(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _hosts: PromiseOrValue<BytesLike>[],
+      _counts: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -439,6 +587,15 @@ export interface ERC721UserFile extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  _withdraw(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  addUserFileAccess(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   approve(
     to: PromiseOrValue<string>,
     tokenId: PromiseOrValue<BigNumberish>,
@@ -450,10 +607,35 @@ export interface ERC721UserFile extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  exists(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getHostPrice(
+    _host: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getUserFilePrice(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getUserFilesPrice(
+    _tokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  hasUserFileAccess(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -498,6 +680,19 @@ export interface ERC721UserFile extends BaseContract {
   setApprovalForAll(
     operator: PromiseOrValue<string>,
     approved: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setHostEventPrice(
+    _host: PromiseOrValue<BytesLike>,
+    _price: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setUserFileEventCount(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _hosts: PromiseOrValue<BytesLike>[],
+    _counts: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -550,6 +745,13 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    _withdraw(overrides?: CallOverrides): Promise<void>;
+
+    addUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -561,10 +763,35 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    exists(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getHostPrice(
+      _host: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getUserFilesPrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hasUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -607,6 +834,19 @@ export interface ERC721UserFile extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setHostEventPrice(
+      _host: PromiseOrValue<BytesLike>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setUserFileEventCount(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _hosts: PromiseOrValue<BytesLike>[],
+      _counts: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -654,6 +894,17 @@ export interface ERC721UserFile extends BaseContract {
   };
 
   filters: {
+    "AddUserFileAccess(uint256,address,uint256)"(
+      tokenId?: null,
+      account?: null,
+      price?: null
+    ): AddUserFileAccessEventFilter;
+    AddUserFileAccess(
+      tokenId?: null,
+      account?: null,
+      price?: null
+    ): AddUserFileAccessEventFilter;
+
     "Approval(address,address,uint256)"(
       owner?: PromiseOrValue<string> | null,
       approved?: PromiseOrValue<string> | null,
@@ -704,6 +955,15 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    _withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    addUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -715,8 +975,33 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    exists(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getHostPrice(
+      _host: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getUserFilesPrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hasUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -763,6 +1048,19 @@ export interface ERC721UserFile extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setHostEventPrice(
+      _host: PromiseOrValue<BytesLike>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setUserFileEventCount(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _hosts: PromiseOrValue<BytesLike>[],
+      _counts: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -816,6 +1114,15 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    _withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    addUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: PromiseOrValue<string>,
       tokenId: PromiseOrValue<BigNumberish>,
@@ -827,8 +1134,33 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    exists(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getHostPrice(
+      _host: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getUserFilesPrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hasUserFileAccess(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -875,6 +1207,19 @@ export interface ERC721UserFile extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setHostEventPrice(
+      _host: PromiseOrValue<BytesLike>,
+      _price: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setUserFileEventCount(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _hosts: PromiseOrValue<BytesLike>[],
+      _counts: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

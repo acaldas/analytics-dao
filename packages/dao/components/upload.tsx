@@ -1,12 +1,16 @@
 "use client";
-import { Button } from "@analytics/ui";
+import { Button, Spinner } from "@analytics/ui";
 import useAnalytics from "hooks/useAnalytics";
+import { useState } from "react";
 import { useAccount } from "wagmi";
 
 const Upload: React.FC = () => {
   const { isConnected } = useAccount();
   const analytics = useAnalytics();
+  const [loading, setLoading] = useState(false);
+
   const uploadAnalytics = async () => {
+    setLoading(true);
     const result = await fetch("api/upload", {
       method: "POST",
       headers: {
@@ -15,15 +19,22 @@ const Upload: React.FC = () => {
       body: JSON.stringify({ ...analytics }),
     });
     console.log(await result.json());
+    setLoading(false);
   };
 
   return (
     <Button
       color="light"
-      disabled={!analytics?.events.length || !isConnected}
+      disabled={!analytics?.events.length || !isConnected || loading}
       onClick={uploadAnalytics}
+      className="flex items-baseline"
     >
-      Upload
+      <span>Upload</span>
+      {loading && (
+        <div className="ml-2">
+          <Spinner size="sm" color="success" />
+        </div>
+      )}
     </Button>
   );
 };

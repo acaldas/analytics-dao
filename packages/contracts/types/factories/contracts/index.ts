@@ -4,4 +4,5 @@
 export { ERC721UserFile__factory } from "./ERC721UserFile__factory";
 export { Lock__factory } from "./Lock__factory";
 export { UserFile__factory } from "./UserFile__factory";
+export { UserFileAccess__factory } from "./UserFileAccess__factory";
 export { UserFileFactory__factory } from "./UserFileFactory__factory";

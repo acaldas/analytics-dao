@@ -82,13 +82,25 @@ export async function indexUserEvents(
 }
 
 export async function fetchHostEventsCount() {
-  return prisma.userEventsFileHostCount.groupBy({
-    by: ["hostName", "count"],
-    orderBy: {
-      count: "desc",
-    },
-    take: 10,
-  });
+  return prisma.userEventsFileHostCount
+    .groupBy({
+      by: ["hostName"],
+      orderBy: {
+        _sum: {
+          count: "desc",
+        },
+      },
+      _sum: {
+        count: true,
+      },
+      take: 10,
+    })
+    .then((result) =>
+      result.map((value) => ({
+        hostName: value.hostName,
+        count: value._sum.count || 0,
+      }))
+    );
 }
 
 export async function fetchUserUploads(tokenIds: number[]) {

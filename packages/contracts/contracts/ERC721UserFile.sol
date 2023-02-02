@@ -6,8 +6,15 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./UserFileAccess.sol";
 
-contract ERC721UserFile is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+contract ERC721UserFile is
+    ERC721,
+    ERC721Enumerable,
+    ERC721URIStorage,
+    Ownable,
+    UserFileAccess
+{
     constructor() ERC721("LytUserFile", "LytF") {}
 
     using Counters for Counters.Counter;
@@ -57,5 +64,25 @@ contract ERC721UserFile is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
     function _setDealId(uint256 tokenId, uint64 _tokenDealId) public onlyOwner {
         require(_exists(tokenId), "DealId set of nonexistent token");
         _tokenDealIds[tokenId] = _tokenDealId;
+    }
+
+    function exists(uint256 tokenId) public view returns (bool) {
+        return _exists(tokenId);
+    }
+
+    function _distributeEarnings(
+        uint256 _tokenId,
+        uint256 _price
+    ) internal override(UserFileAccess) {
+        require(msg.value >= _price);
+        address payable _owner = payable(ownerOf(_tokenId));
+        _owner.transfer(_price);
+
+        // TREASURY FEE
+        // STORAGE PROVIDER FEE
+    }
+
+    function _withdraw() public onlyOwner {
+        payable(msg.sender).transfer(address(this).balance);
     }
 }

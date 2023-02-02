@@ -8,7 +8,6 @@ import {
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { wagmiChains } from "../providers";
 import { Button } from "flowbite-react";
-import { useEffect } from "react";
 
 const Profile: React.FC = () => {
   const { address, isConnected } = useAccount();
@@ -21,7 +20,6 @@ const Profile: React.FC = () => {
   const { error, isLoading, pendingChainId, switchNetwork } =
     useSwitchNetwork();
 
-  useEffect(() => {});
   return (
     <div className="flex">
       <div>

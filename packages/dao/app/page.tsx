@@ -7,7 +7,6 @@ import Uploads from "components/uploads";
 import Logo from "components/logo";
 
 const Profile = dynamic(() => import("../components/profile"), { ssr: false });
-const Login = dynamic(() => import("../components/login"), { ssr: false });
 
 export default async function Home() {
   const hostEventsCount = await fetchHostEventsCount();
@@ -17,8 +16,6 @@ export default async function Home() {
         <Logo size={100} title />
         <div>
           <Profile />
-          <Upload />
-          <Login />
         </div>
       </div>
       <div className="flex flex-1">
@@ -27,8 +24,11 @@ export default async function Home() {
           <Hosts hosts={hostEventsCount} />
         </div>
         <div className="w-1/2">
-          <h2 className="text-2xl">My Uploads</h2>
-          {/* <Uploads /> */}
+          <div className="flex items-center">
+            <h2 className="text-2xl mr-8">My Uploads</h2>
+            <Upload />
+          </div>
+          <Uploads />
         </div>
       </div>
     </div>
