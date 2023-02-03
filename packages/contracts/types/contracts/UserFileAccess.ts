@@ -30,10 +30,11 @@ import type {
 
 export interface UserFileAccessInterface extends utils.Interface {
   functions: {
+    "addMultipleUserFileAccess(uint256[])": FunctionFragment;
     "addUserFileAccess(uint256)": FunctionFragment;
     "getHostPrice(bytes)": FunctionFragment;
+    "getMultipleUserFilePrice(uint256[])": FunctionFragment;
     "getUserFilePrice(uint256)": FunctionFragment;
-    "getUserFilesPrice(uint256[])": FunctionFragment;
     "hasUserFileAccess(uint256)": FunctionFragment;
     "owner()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
@@ -44,10 +45,11 @@ export interface UserFileAccessInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "addMultipleUserFileAccess"
       | "addUserFileAccess"
       | "getHostPrice"
+      | "getMultipleUserFilePrice"
       | "getUserFilePrice"
-      | "getUserFilesPrice"
       | "hasUserFileAccess"
       | "owner"
       | "renounceOwnership"
@@ -57,6 +59,10 @@ export interface UserFileAccessInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(
+    functionFragment: "addMultipleUserFileAccess",
+    values: [PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "addUserFileAccess",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -65,12 +71,12 @@ export interface UserFileAccessInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserFilePrice",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "getMultipleUserFilePrice",
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserFilesPrice",
-    values: [PromiseOrValue<BigNumberish>[]]
+    functionFragment: "getUserFilePrice",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "hasUserFileAccess",
@@ -99,6 +105,10 @@ export interface UserFileAccessInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "addMultipleUserFileAccess",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "addUserFileAccess",
     data: BytesLike
   ): Result;
@@ -107,11 +117,11 @@ export interface UserFileAccessInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserFilePrice",
+    functionFragment: "getMultipleUserFilePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserFilesPrice",
+    functionFragment: "getUserFilePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -197,6 +207,11 @@ export interface UserFileAccess extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -207,13 +222,13 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber[]]>;
+
     getUserFilePrice(
       _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -247,6 +262,11 @@ export interface UserFileAccess extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  addMultipleUserFileAccess(
+    _tokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   addUserFileAccess(
     _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -257,13 +277,13 @@ export interface UserFileAccess extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  getMultipleUserFilePrice(
+    _tokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber[]]>;
+
   getUserFilePrice(
     _tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getUserFilesPrice(
-    _tokenIds: PromiseOrValue<BigNumberish>[],
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -297,6 +317,11 @@ export interface UserFileAccess extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -307,13 +332,13 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber[]]>;
+
     getUserFilePrice(
       _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -368,6 +393,11 @@ export interface UserFileAccess extends BaseContract {
   };
 
   estimateGas: {
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -378,13 +408,13 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getUserFilePrice(
-      _tokenId: PromiseOrValue<BigNumberish>,
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -419,6 +449,11 @@ export interface UserFileAccess extends BaseContract {
   };
 
   populateTransaction: {
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -429,13 +464,13 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getUserFilePrice(
-      _tokenId: PromiseOrValue<BigNumberish>,
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

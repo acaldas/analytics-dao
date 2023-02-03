@@ -50,7 +50,7 @@ contract ERC721UserFile is
     }
 
     function mint(address to, string memory _tokenURI) public onlyOwner {
-        _safeMint(to, _tokenIdTracker.current());
+        _mint(to, _tokenIdTracker.current());
         _setTokenURI(_tokenIdTracker.current(), _tokenURI);
         _tokenIdTracker.increment();
     }

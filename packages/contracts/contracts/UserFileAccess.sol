@@ -16,17 +16,28 @@ contract UserFileAccess is Ownable {
 
     event AddUserFileAccess(uint256 tokenId, address account, uint256 price);
 
-    function addUserFileAccess(uint256 _tokenId) public payable {
+    function addUserFileAccess(uint256 _tokenId) external payable {
         require(
             userFileEventCount[_tokenId].length > 0,
             "File events count not set"
         );
-        uint256 _price = getUserFilePrice(_tokenId);
+        uint256 _price = this.getUserFilePrice(_tokenId);
         require(msg.value >= _price, "Not enough funds");
         userFileAccess[_tokenId][msg.sender] = true;
         emit AddUserFileAccess(_tokenId, msg.sender, _price);
 
         _distributeEarnings(_tokenId, _price);
+    }
+
+    function addMultipleUserFileAccess(
+        uint256[] calldata _tokenIds
+    ) external payable {
+        (uint256 _totalPrice, uint256[] memory _prices) = this
+            .getMultipleUserFilePrice(_tokenIds);
+        require(msg.value >= _totalPrice, "Not enough funds for all files");
+        for (uint i = 0; i < _tokenIds.length; i++) {
+            this.addUserFileAccess{value: _prices[i]}(_tokenIds[i]);
+        }
     }
 
     function _distributeEarnings(
@@ -67,24 +78,29 @@ contract UserFileAccess is Ownable {
         }
     }
 
-    function getUserFilePrice(uint256 _tokenId) public view returns (uint256) {
+    function getUserFilePrice(
+        uint256 _tokenId
+    ) external view returns (uint256) {
         uint256 _total = 0;
-        EventCount[] memory _eventsCount = userFileEventCount[_tokenId];
+        EventCount[] storage _eventsCount = userFileEventCount[_tokenId];
         for (uint i = 0; i < _eventsCount.length; i++) {
-            EventCount memory _eventCount = _eventsCount[i];
+            EventCount storage _eventCount = _eventsCount[i];
             _total += _eventCount.count * getHostPrice(_eventCount.host);
         }
         return _total;
     }
 
-    function getUserFilesPrice(
-        uint256[] memory _tokenIds
-    ) public view returns (uint256) {
+    function getMultipleUserFilePrice(
+        uint256[] calldata _tokenIds
+    ) external view returns (uint256, uint256[] memory) {
         uint256 _total = 0;
+        uint256[] memory _prices = new uint256[](_tokenIds.length);
         for (uint i = 0; i < _tokenIds.length; i++) {
             uint256 _tokenId = _tokenIds[i];
-            _total += getUserFilePrice(_tokenId);
+            uint256 _price = this.getUserFilePrice(_tokenId);
+            _total += _price;
+            _prices[i] = _price;
         }
-        return _total;
+        return (_total, _prices);
     }
 }

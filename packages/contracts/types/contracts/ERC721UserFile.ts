@@ -32,14 +32,15 @@ export interface ERC721UserFileInterface extends utils.Interface {
   functions: {
     "_setDealId(uint256,uint64)": FunctionFragment;
     "_withdraw()": FunctionFragment;
+    "addMultipleUserFileAccess(uint256[])": FunctionFragment;
     "addUserFileAccess(uint256)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "exists(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getHostPrice(bytes)": FunctionFragment;
+    "getMultipleUserFilePrice(uint256[])": FunctionFragment;
     "getUserFilePrice(uint256)": FunctionFragment;
-    "getUserFilesPrice(uint256[])": FunctionFragment;
     "hasUserFileAccess(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(address,string)": FunctionFragment;
@@ -67,14 +68,15 @@ export interface ERC721UserFileInterface extends utils.Interface {
     nameOrSignatureOrTopic:
       | "_setDealId"
       | "_withdraw"
+      | "addMultipleUserFileAccess"
       | "addUserFileAccess"
       | "approve"
       | "balanceOf"
       | "exists"
       | "getApproved"
       | "getHostPrice"
+      | "getMultipleUserFilePrice"
       | "getUserFilePrice"
-      | "getUserFilesPrice"
       | "hasUserFileAccess"
       | "isApprovedForAll"
       | "mint"
@@ -104,6 +106,10 @@ export interface ERC721UserFileInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "_withdraw", values?: undefined): string;
   encodeFunctionData(
+    functionFragment: "addMultipleUserFileAccess",
+    values: [PromiseOrValue<BigNumberish>[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "addUserFileAccess",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -128,12 +134,12 @@ export interface ERC721UserFileInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserFilePrice",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "getMultipleUserFilePrice",
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "getUserFilesPrice",
-    values: [PromiseOrValue<BigNumberish>[]]
+    functionFragment: "getUserFilePrice",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "hasUserFileAccess",
@@ -231,6 +237,10 @@ export interface ERC721UserFileInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "_setDealId", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "_withdraw", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "addMultipleUserFileAccess",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "addUserFileAccess",
     data: BytesLike
   ): Result;
@@ -246,11 +256,11 @@ export interface ERC721UserFileInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserFilePrice",
+    functionFragment: "getMultipleUserFilePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getUserFilesPrice",
+    functionFragment: "getUserFilePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -433,6 +443,11 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -464,13 +479,13 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber[]]>;
+
     getUserFilePrice(
       _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -591,6 +606,11 @@ export interface ERC721UserFile extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  addMultipleUserFileAccess(
+    _tokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   addUserFileAccess(
     _tokenId: PromiseOrValue<BigNumberish>,
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -622,13 +642,13 @@ export interface ERC721UserFile extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  getMultipleUserFilePrice(
+    _tokenIds: PromiseOrValue<BigNumberish>[],
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber[]]>;
+
   getUserFilePrice(
     _tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getUserFilesPrice(
-    _tokenIds: PromiseOrValue<BigNumberish>[],
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -747,6 +767,11 @@ export interface ERC721UserFile extends BaseContract {
 
     _withdraw(overrides?: CallOverrides): Promise<void>;
 
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -778,13 +803,13 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber[]]>;
+
     getUserFilePrice(
       _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -959,6 +984,11 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -990,13 +1020,13 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getUserFilePrice(
-      _tokenId: PromiseOrValue<BigNumberish>,
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1118,6 +1148,11 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    addMultipleUserFileAccess(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     addUserFileAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
@@ -1149,13 +1184,13 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getUserFilePrice(
-      _tokenId: PromiseOrValue<BigNumberish>,
+    getMultipleUserFilePrice(
+      _tokenIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getUserFilesPrice(
-      _tokenIds: PromiseOrValue<BigNumberish>[],
+    getUserFilePrice(
+      _tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

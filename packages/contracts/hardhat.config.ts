@@ -2,6 +2,7 @@ import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@typechain/hardhat";
 import "@nomiclabs/hardhat-ethers";
+import "hardhat-gas-reporter";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.17",
@@ -16,6 +17,9 @@ const config: HardhatUserConfig = {
         interval: 5000,
       },
     },
+  },
+  gasReporter: {
+    enabled: false,
   },
 };
 
