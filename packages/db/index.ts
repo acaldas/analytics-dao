@@ -1,7 +1,10 @@
 import { Prisma, PrismaClient } from "@prisma/client";
-import { Event, getHostEventsCount } from "@analytics/shared";
+import { getHostEventsCount } from "@analytics/shared";
+import { Event } from "@analytics/shared/types";
 import { LighthouseFile } from "@analytics/shared/types";
 export * as db from "@prisma/client";
+export * from "./queries/user";
+export * from "./queries/file";
 
 const prisma = new PrismaClient();
 
@@ -101,21 +104,4 @@ export async function fetchHostEventsCount() {
         count: value._sum.count || 0,
       }))
     );
-}
-
-export async function fetchUserUploads(tokenIds: number[]) {
-  const result = await prisma.userEventsFile.findMany({
-    where: {
-      tokenId: { in: tokenIds },
-    },
-    include: {
-      eventsCount: {
-        orderBy: { count: "desc" },
-      },
-    },
-    orderBy: {
-      tokenId: "desc",
-    },
-  });
-  return result;
 }

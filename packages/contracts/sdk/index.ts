@@ -53,3 +53,16 @@ export async function getUserTokenIds(user: string) {
 
   return tokenIds;
 }
+
+export async function setUserFileEventCount(
+  tokenId: number,
+  eventCount: Record<string, number>
+) {
+  const hosts = Object.keys(eventCount);
+  const count = hosts.map((host) => eventCount[host]);
+  await contract.setUserFileEventCount(
+    tokenId,
+    hosts.map(ethers.utils.formatBytes32String),
+    count
+  );
+}

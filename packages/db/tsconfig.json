@@ -7,6 +7,6 @@
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "files": ["index.ts"],
-  "references": [{ "path": "../shared" }]
+  "include": ["index.ts", "queries/*.ts"],
+  "references": [{ "path": "../shared" }, { "path": "../contracts" }]
 }
