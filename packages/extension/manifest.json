@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Hello CRX!",
-  "description": "Base Level Extension",
+  "name": "LytDAO Watcher",
+  "description": "Browser extension for LytDAO",
   "version": "1.0",
   "action": {
     "default_popup": "index.html"
@@ -20,5 +20,8 @@
   "host_permissions": ["http://localhost:3000/*"],
   "externally_connectable": {
     "matches": ["http://localhost:3000/*"]
+  },
+  "icons": {
+    "48": "public/favicon.ico"
   }
 }

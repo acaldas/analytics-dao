@@ -2,9 +2,10 @@
   "name": "@analytics/ui",
   "version": "1.0.0",
   "dependencies": {
+    "@headlessui/react": "^1.7.9",
+    "@headlessui/tailwindcss": "^0.1.2",
+    "@heroicons/react": "^2.0.14",
     "ethers": "^5.7.2",
-    "flowbite": "^1.6.3",
-    "flowbite-react": "^0.3.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "wagmi": "^0.10.15"

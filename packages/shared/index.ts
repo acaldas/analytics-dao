@@ -1,4 +1,4 @@
-import type { Event, ExtensionEvent } from "./types";
+import { ExtensionEvent, Event, UserFile } from "./types";
 
 export function extensionEventToEvent(event: ExtensionEvent): Event {
   try {
@@ -9,9 +9,10 @@ export function extensionEventToEvent(event: ExtensionEvent): Event {
         ...event.properties,
         host: url.hostname,
       },
-      timestamp: event.meta.ts.toString(),
+      timestamp: event.meta?.ts.toString() ?? (event as any as Event).timestamp,
     };
-  } catch {
+  } catch (error) {
+    console.log("error", error);
     console.error(event.properties);
   }
 }
@@ -21,7 +22,5 @@ export function getHostEventsCount(events: Event[]) {
     const count = acc[curr.properties.host] || 0;
     acc[curr.properties.host] = count + 1;
     return acc;
-  }, new Map<string, number>());
+  }, {} as Record<string, number>);
 }
-
-export { Event, ExtensionEvent };

@@ -27,12 +27,12 @@ const Upload: React.FC = () => {
       color="light"
       disabled={!analytics?.events.length || !isConnected || loading}
       onClick={uploadAnalytics}
-      className="flex items-baseline"
+      className="flex items-center"
     >
       <span>Upload</span>
       {loading && (
-        <div className="ml-2">
-          <Spinner size="sm" color="success" />
+        <div className="ml-4">
+          <Spinner />
         </div>
       )}
     </Button>

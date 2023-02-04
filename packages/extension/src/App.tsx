@@ -1,57 +1,27 @@
-import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
-import "./App.css";
-import { Profile } from "@analytics/ui";
-import { ExtensionStorage } from "@analytics/shared/types";
+import { Button } from "@analytics/ui";
+import Header from "./components/header";
+import Record from "./components/record";
+import Menu from "./components/menu";
 
 function App() {
-  const [recording, setRecording] = useState<boolean | undefined>();
-  const [data, setData] = useState<ExtensionStorage>();
-
-  useEffect(() => {
-    chrome.storage?.local.get().then((data) => setData(data));
-  }, []);
-
-  useEffect(() => {
-    if (recording !== undefined) {
-      chrome.runtime.sendMessage({
-        message: "update-tracking",
-        tracking: recording,
-      });
-    }
-  }, [recording]);
-
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="w-full">
+      <Header />
+      <div className="flex justify-center mt-4 mb-4">
+        <Record />
       </div>
-      <h1>
-        <button
-          onClick={() => {
-            setRecording((recording) => !recording);
-          }}
-        >
-          {recording ? "Rec" : "Paused"}
-        </button>
-      </h1>
-      <div className="card">
-        <button>count is {recording}</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div className="flex flex-col justify-center items-center">
+        <Button className="px-0 py-0">
+          <a
+            className="px-4 py-2"
+            href="http://localhost:3000/"
+            target="_blank"
+          >
+            Upload analytics
+          </a>
+        </Button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <a href="http://localhost:3000/" target="_blank">
-        Upload
-      </a>
+      <Menu />
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { UserEventsFile, UserEventsFileHostCount } from "@prisma/client";
+
 export type EventType = "page";
 
 export type EventProperties = {
@@ -36,3 +38,7 @@ export type LighthouseFile = {
   hash: string;
   size: string | number;
 };
+
+export type UserFile = Omit<UserEventsFile, "timestamp"> & {
+  eventsCount: UserEventsFileHostCount[];
+} & { timestamp: string };

@@ -7,7 +7,7 @@ import {
 } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { wagmiChains } from "../providers";
-import { Button } from "flowbite-react";
+import { Button } from "@analytics/ui";
 
 const Profile: React.FC = () => {
   const { address, isConnected } = useAccount();

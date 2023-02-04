@@ -1,6 +1,13 @@
 "use client";
 
-import { Table } from "@analytics/ui/";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow,
+} from "@analytics/ui";
 import React from "react";
 
 interface IProps {
@@ -8,26 +15,26 @@ interface IProps {
 }
 
 const Hosts: React.FC<IProps> = ({ hosts }) => (
-  <Table className="mt-4 overflow-hidden">
-    <Table.Head className="bg-backgroundDark table table-fixed w-full">
-      <Table.HeadCell className="w-3/4">Host</Table.HeadCell>
-      <Table.HeadCell>Events</Table.HeadCell>
-    </Table.Head>
-    <Table.Body className="divide-y overflow-auto block">
-      {hosts.map((row) => (
-        <Table.Row className="table table-fixed w-full" key={row.hostName}>
-          <Table.Cell className="w-3/4">
+  <Table className="mt-4">
+    <TableHead>
+      <TableHeadCell className="w-2/3 text-2xl">Host</TableHeadCell>
+      <TableHeadCell className="text-2xl">Events</TableHeadCell>
+    </TableHead>
+    <TableBody>
+      {hosts.map((row, i) => (
+        <TableRow i={i} key={row.hostName}>
+          <TableCell className="w-2/3">
             <a
               href={`http://${row.hostName}`}
               className="underline block whitespace-nowrap text-ellipsis overflow-hidden w-full"
             >
               {row.hostName.split("www.").pop()}
             </a>
-          </Table.Cell>
-          <Table.Cell>{row.count}</Table.Cell>
-        </Table.Row>
+          </TableCell>
+          <TableCell>{row.count}</TableCell>
+        </TableRow>
       ))}
-    </Table.Body>
+    </TableBody>
   </Table>
 );
 

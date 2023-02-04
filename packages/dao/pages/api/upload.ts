@@ -6,14 +6,15 @@ import {
   indexUserEvents,
   validateUserEvents,
 } from "@analytics/db";
+import { extensionEventToEvent, getHostEventsCount } from "@analytics/shared";
 import {
-  ExtensionEvent,
-  extensionEventToEvent,
-  getHostEventsCount,
-} from "@analytics/shared";
-import { getUserTokenIds, mintUserFile } from "@analytics/contracts";
+  getUserTokenIds,
+  mintUserFile,
+  setUserFileEventCount,
+} from "@analytics/contracts";
 import { ApiError } from "next/dist/server/api-utils";
 import withIronSessionApiRoute from "hooks/withIronSessionApiRoute";
+import { ExtensionEvent } from "@analytics/shared/types";
 
 const sign_auth_message = async (publicKey: string, privateKey: string) => {
   const provider = new ethers.providers.JsonRpcProvider();
@@ -93,11 +94,12 @@ export default withIronSessionApiRoute(async function (
       throw new ApiError(500, "File upload failed");
     }
 
+    const eventCount = getHostEventsCount(events);
     const metadata = {
       description: "LytDao user file",
       userId,
       cId: file.data.Name,
-      hosts: getHostEventsCount(events),
+      hosts: eventCount,
     };
 
     const metadataFile = await uploadEncrypted(JSON.stringify(metadata));
@@ -118,6 +120,8 @@ export default withIronSessionApiRoute(async function (
       },
       metadataFile.data.Name
     );
+
+    setUserFileEventCount(tokenId, eventCount);
 
     response.status(200).json({ status: "success", result });
   } catch (error) {

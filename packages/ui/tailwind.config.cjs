@@ -3,15 +3,15 @@ const { fontFamily } = require("tailwindcss/defaultTheme");
 /** @type {import('tailwindcss').Config} */
 
 module.exports = {
-  content: [
-    `${__dirname}/components/**/*.{js,ts,jsx,tsx}`,
-    "../../node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: [`${__dirname}/src/components/**/*.{js,ts,jsx,tsx}`],
   theme: {
     extend: {
       colors: {
         background: "rgb(242,237,232)",
-        backgroundDark: "rgb(238,230,223)",
+        dark: "rgb(238,230,223)",
+        darker: "rgb(234,223,214)",
+        light: "rgb(241,235,230)",
+        lighter: "rgb(246,241,236)",
         text: "rgb(38,38,38)",
         white: "rgb(252,252,249)",
         primary: "rgb(254,170,128)",
@@ -28,5 +28,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [
+    require("@tailwindcss/forms"),
+    require("@headlessui/tailwindcss")({ prefix: "ui" }),
+  ],
 };

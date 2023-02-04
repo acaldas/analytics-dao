@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
     "composite": true
-  }
+  },
+  "files": ["index.ts", "types.d.ts"]
 }

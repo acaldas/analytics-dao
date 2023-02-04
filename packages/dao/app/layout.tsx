@@ -17,7 +17,7 @@ export default function RootLayout({
         head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
       */}
       <head />
-      <body className={`${comfortaa.className} bg-white`}>
+      <body className={`${comfortaa.className} bg-background`}>
         <Main>
           <Provider>{children}</Provider>
         </Main>
