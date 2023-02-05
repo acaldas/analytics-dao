@@ -45,6 +45,10 @@ export const TableRow: React.FC<
   />
 );
 
-export const TableCell: React.FC<React.HTMLProps<HTMLTableCellElement>> = (
-  props
-) => <td align="left" {...props} className={`p-4 ${props.className}`} />;
+export const TableCell: React.FC<
+  React.HTMLProps<HTMLTableCellElement> & {
+    align?: "left" | "center" | "right" | "justify" | "char" | undefined;
+  }
+> = ({ align = "left", ...props }) => (
+  <td align={align} {...props} className={`p-4 ${props.className}`} />
+);

@@ -1,3 +1,5 @@
+import { defaultExtensionSettings } from "@analytics/shared";
+import { ExtensionSettings } from "@analytics/shared/types";
 import Analytics from "analytics";
 
 const analytics = Analytics({
@@ -22,7 +24,19 @@ const reset = () => {
 
 const init = async () => {
   // initialize tracking
-  let tracking = (await chrome.storage.local.get("tracking")) || false;
+  let recording = await chrome.storage.local
+    .get("recording")
+    .then((value) => value.recording || false);
+
+  // set context
+  const context = analytics.getState("context");
+  chrome.storage.local.set({ context });
+
+  chrome.storage.local.onChanged.addListener((changes) => {
+    if (changes.recording) {
+      recording = changes.recording.newValue;
+    }
+  });
 
   // initialize user id
   const storageUserId = (await chrome.storage.local.get("userId")).userId;
@@ -41,8 +55,24 @@ const init = async () => {
     await chrome.storage.local.set({ events: [] });
   }
 
+  // initialize settings
+  let settings: ExtensionSettings = (await chrome.storage.local.get("settings"))
+    .settings;
+  settings = settings
+    ? { ...defaultExtensionSettings, ...settings }
+    : defaultExtensionSettings;
+
+  settings.OS.value = context.os.name;
+  settings.browser.value = context.userAgent;
+  settings.locale.value = context.locale;
+  settings.timezone.value = context.timezone;
+
+  await chrome.storage.local.set({
+    settings,
+  });
+
   // track initial page
-  analytics.page({ url: location.href });
+  recording && analytics.page({ url: location.href });
 
   // listen to history updates
   chrome.runtime.onMessage.addListener(function (
@@ -54,19 +84,14 @@ const init = async () => {
       case "history-update":
         // check if updated page is new
         const currentUrl = analytics.getState("page").last?.properties?.url;
-        if (request.url !== currentUrl) {
+        if (request.url !== currentUrl && recording) {
           analytics.page({ url: request.url });
         }
         break;
-      case "update-tracking":
-        console.log("UPDATE TRACKING", request);
-        tracking = request.payload;
-        chrome.storage.local.set({ tracking: request.payload });
-        break;
       default:
-        console.log(request);
-        sendResponse({ message: "ola" });
+        sendResponse({ message: "ack" });
     }
+    return true;
   });
 };
 

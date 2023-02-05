@@ -1,4 +1,4 @@
-import { ExtensionEvent, Event, UserFile } from "./types";
+import { ExtensionEvent, Event, UserFile, ExtensionSettings } from "./types";
 
 export function extensionEventToEvent(event: ExtensionEvent): Event {
   try {
@@ -24,3 +24,27 @@ export function getHostEventsCount(events: Event[]) {
     return acc;
   }, {} as Record<string, number>);
 }
+
+export const defaultExtensionSettings: ExtensionSettings = {
+  location: {
+    enabled: false,
+  },
+  gender: {
+    enabled: false,
+  },
+  age: {
+    enabled: false,
+  },
+  locale: {
+    enabled: false,
+  },
+  OS: {
+    enabled: false,
+  },
+  timezone: {
+    enabled: false,
+  },
+  browser: {
+    enabled: false,
+  },
+};

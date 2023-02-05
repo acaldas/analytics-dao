@@ -74,7 +74,7 @@ const EventList: React.FC<IProps> = ({ events, onDelete, maxHeight }) => {
                 </a>
                 <button
                   onClick={() => onDelete?.(e)}
-                  className="flex-shrink-0 text-red-600 font-bold hover:drop-shadow"
+                  className="flex-shrink-0 text-sm text-red-600 font-bold hover:drop-shadow"
                 >
                   Delete
                 </button>

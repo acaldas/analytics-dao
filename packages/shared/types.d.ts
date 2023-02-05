@@ -28,9 +28,30 @@ export type ExtensionEvent = {
   userId: string;
 };
 
+export type ExtensionSettingKey =
+  | "location"
+  | "gender"
+  | "age"
+  | "locale"
+  | "OS"
+  | "timezone"
+  | "browser";
+
+export type ExtensionSettingValue = {
+  enabled: boolean;
+  value?: string;
+};
+
+export type ExtensionSettings = Record<
+  ExtensionSettingKey,
+  ExtensionSettingValue
+>;
+
 export type ExtensionStorage = {
   events: ExtensionEvent[];
   userId: string;
+  recording: boolean;
+  settings: ExtensionSettings;
 };
 
 export type LighthouseFile = {

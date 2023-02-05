@@ -5,11 +5,13 @@ export default function Record() {
   const [recording, setRecording] = useState<boolean | undefined>();
 
   useEffect(() => {
+    chrome.storage.local.get("recording").then((value) => {
+      setRecording(value.recording || false);
+    });
+  }, []);
+  useEffect(() => {
     if (recording !== undefined) {
-      chrome.runtime.sendMessage({
-        message: "update-tracking",
-        tracking: recording,
-      });
+      chrome.storage.local.set({ recording });
     }
   }, [recording]);
 

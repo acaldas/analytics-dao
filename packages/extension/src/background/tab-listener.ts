@@ -1,3 +1,5 @@
+import { flattenDiagnosticMessageText } from "typescript";
+
 try {
   chrome.webNavigation.onHistoryStateUpdated.addListener((event) => {
     chrome.tabs.sendMessage(event.tabId, {
@@ -5,15 +7,22 @@ try {
       url: event.url,
     });
   });
-  console.log("LISTENING");
+
   chrome.runtime.onMessageExternal.addListener(async function (
-    request,
+    message,
     sender,
     sendResponse
   ) {
-    console.log(sender, request);
-    const storage = await chrome.storage.local.get();
-    sendResponse({ storage });
+    if (sender.origin !== "http://localhost:3000") {
+      return false;
+    }
+
+    switch (message.request) {
+      case "get-analytics":
+        const storage = await chrome.storage.local.get();
+        sendResponse({ storage });
+        break;
+    }
     return true;
   });
 } catch (error) {

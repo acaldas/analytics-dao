@@ -16,7 +16,12 @@
     "service_worker": "src/background/tab-listener.ts",
     "type": "module"
   },
-  "permissions": ["storage", "unlimitedStorage", "webNavigation"],
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "webNavigation",
+    "geolocation"
+  ],
   "host_permissions": ["http://localhost:3000/*"],
   "externally_connectable": {
     "matches": ["http://localhost:3000/*"]

@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { extensionEventToEvent } from "@analytics/shared";
-import { ExtensionStorage, Event } from "@analytics/shared/types";
+import {
+  ExtensionStorage,
+  Event,
+  ExtensionSettingKey,
+} from "@analytics/shared/types";
 import {
   Accordion,
   AccordionButton,
   AccordionPanel,
   EventList,
 } from "@analytics/ui";
+import Settings from "./settings";
 
 export default function Menu() {
   const [data, setData] = useState<ExtensionStorage>();
@@ -18,12 +23,18 @@ export default function Menu() {
 
   useEffect(() => {
     chrome.storage?.local.onChanged.addListener((changes) => {
+      const newData = { ...data };
       if (changes.events?.newValue) {
-        setData((data) => ({ ...data!, events: changes.events.newValue }));
+        newData.events = changes.events.newValue;
+      } else if (changes.settings?.newValue) {
+        newData.settings = changes.settings.newValue;
       }
+
+      setData((data) => ({ ...data, ...(newData as any) }));
     });
     chrome.storage?.local.get().then((data) => setData(data as any));
   }, []);
+
   const events = useMemo(
     () => data?.events.map(extensionEventToEvent).reverse(),
     [data]
@@ -50,7 +61,20 @@ export default function Menu() {
     } else if (accordion === "settings" && accordionOpen === "events") {
       eventsRef.current?.click();
     }
-    setAccordionOpen(accordion);
+    setAccordionOpen(accordionOpen === accordion ? undefined : accordion);
+  }
+
+  function updateSetting(
+    key: ExtensionSettingKey,
+    enabled: boolean,
+    value?: string
+  ) {
+    chrome.storage?.local.set({
+      settings: {
+        ...data?.settings,
+        [key]: { ...data?.settings[key], enabled, value },
+      },
+    });
   }
 
   return (
@@ -81,7 +105,11 @@ export default function Menu() {
         >
           Settings
         </AccordionButton>
-        <AccordionPanel>Ola</AccordionPanel>
+        <AccordionPanel>
+          {data?.settings && (
+            <Settings settings={data.settings} updateSetting={updateSetting} />
+          )}
+        </AccordionPanel>
       </Accordion>
     </div>
   );
