@@ -71,8 +71,6 @@ function useLogin() {
     error?: Error;
   }>({});
   const { setAddress } = useAuth();
-  const { address } = useAccount();
-  const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
   const fetchNonce = async () => {
@@ -89,11 +87,9 @@ function useLogin() {
     fetchNonce();
   }, []);
 
-  const login = async () => {
+  const login = async (address?: string, chainId?: number) => {
     try {
-      const chainId = chain?.id;
       if (!address || !chainId) {
-        console.error("Test", address, chainId);
         throw new Error("Wallet not connected!");
       }
 

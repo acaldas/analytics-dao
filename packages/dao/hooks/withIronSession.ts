@@ -13,6 +13,8 @@ export async function getAddress() {
   const session: { siwe: SiweMessage } = await unsealData(cookie.value, {
     password: ironSessionOptions.password,
   });
-
+  if (!session.siwe) {
+    return undefined;
+  }
   return session.siwe.address;
 }

@@ -31,14 +31,7 @@ describe("UserFile", function () {
       const [, acc1] = await ethers.getSigners();
       await ERC721UserFile.mint(acc1.address, "");
 
-      await ERC721UserFile.setUserFileEventCount(
-        0,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 2]
-      );
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       const defaultPrice = ethers.utils.parseEther("0.3");
       expect(await ERC721UserFile.getUserFilePrice(0)).to.equal(defaultPrice);
     });
@@ -48,14 +41,7 @@ describe("UserFile", function () {
       const [, acc1, acc2] = await ethers.getSigners();
       await ERC721UserFile.mint(acc1.address, "");
 
-      await ERC721UserFile.setUserFileEventCount(
-        0,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 2]
-      );
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       await ERC721UserFile.connect(acc2).addUserFileAccess(0, {
         value: ethers.utils.parseEther("0.3"),
       });
@@ -78,14 +64,7 @@ describe("UserFile", function () {
       const [, acc1, acc2] = await ethers.getSigners();
       await ERC721UserFile.mint(acc1.address, "");
 
-      await ERC721UserFile.setUserFileEventCount(
-        0,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 2]
-      );
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
 
       await expect(
         ERC721UserFile.connect(acc2).addUserFileAccess(0, {
@@ -102,14 +81,7 @@ describe("UserFile", function () {
       const initialBalance = await acc1.getBalance();
       const price = ethers.utils.parseEther("0.3");
 
-      await ERC721UserFile.setUserFileEventCount(
-        0,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 2]
-      );
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       await ERC721UserFile.connect(acc2).addUserFileAccess(0, {
         value: price,
       });
@@ -122,22 +94,8 @@ describe("UserFile", function () {
       await ERC721UserFile.mint(acc1.address, "");
       await ERC721UserFile.mint(acc2.address, "");
 
-      await ERC721UserFile.setUserFileEventCount(
-        0,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 2]
-      );
-      await ERC721UserFile.setUserFileEventCount(
-        1,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 1]
-      );
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
+      await ERC721UserFile.setUserFileEventCount(1, ["host1", "host2"], [1, 1]);
       const price1 = ethers.utils.parseEther("0.3");
       const price2 = ethers.utils.parseEther("0.2");
       const total = await ERC721UserFile.getMultipleUserFilePrice([0, 1]);
@@ -152,22 +110,8 @@ describe("UserFile", function () {
       await ERC721UserFile.mint(acc1.address, "");
       await ERC721UserFile.mint(acc2.address, "");
 
-      await ERC721UserFile.setUserFileEventCount(
-        0,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 2]
-      );
-      await ERC721UserFile.setUserFileEventCount(
-        1,
-        [
-          ethers.utils.formatBytes32String("host1"),
-          ethers.utils.formatBytes32String("host2"),
-        ],
-        [1, 1]
-      );
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
+      await ERC721UserFile.setUserFileEventCount(1, ["host1", "host2"], [1, 1]);
       const price1 = ethers.utils.parseEther("0.3");
       const price2 = ethers.utils.parseEther("0.2");
 

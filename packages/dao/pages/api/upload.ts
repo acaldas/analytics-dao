@@ -16,8 +16,10 @@ import { ApiError } from "next/dist/server/api-utils";
 import withIronSessionApiRoute from "hooks/withIronSessionApiRoute";
 import { ExtensionEvent } from "@analytics/shared/types";
 
+const RPC_PROVIDER = process.env.RPC_PROVIDER;
+
 const sign_auth_message = async (publicKey: string, privateKey: string) => {
-  const provider = new ethers.providers.JsonRpcProvider();
+  const provider = new ethers.providers.JsonRpcProvider(RPC_PROVIDER);
   const signer = new ethers.Wallet(privateKey, provider);
   const messageRequested = (await lighthouse.getAuthMessage(publicKey)).data
     .message;
@@ -47,6 +49,7 @@ async function getUserUploads(
   response: NextApiResponse
 ) {
   try {
+    console.log("OLA", request.session.siwe);
     const userAddress = request.session.siwe!.address;
     const tokenIds = await getUserTokenIds(userAddress);
     const uploads = await fetchUserUploads(tokenIds);

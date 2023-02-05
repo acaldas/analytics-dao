@@ -6,11 +6,16 @@ import { TransferEvent } from "../types/contracts/ERC721UserFile";
 const ERC721_ADDRESS =
   process.env.ERC721_ADDRESS || process.env.NEXT_PUBLIC_ERC721_ADDRESS;
 
+const RPC_PROVIDER =
+  process.env.RPC_PROVIDER ||
+  process.env.NEXT_PUBLIC_RPC_PROVIDER ||
+  "http://127.0.0.1:8545/";
+
 if (!ERC721_ADDRESS) {
   throw new Error("ERC721_ADDRESS not defined");
 }
 
-const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
+const provider = new ethers.providers.JsonRpcProvider(RPC_PROVIDER);
 
 const OWNER_PRIVATE_KEY = process.env.OWNER_PRIVATE_KEY;
 
@@ -54,15 +59,21 @@ export async function getUserTokenIds(user: string) {
   return tokenIds;
 }
 
+export async function getUserFilePrice(tokenId: number) {
+  return contract.getUserFilePrice(tokenId);
+}
+
 export async function setUserFileEventCount(
   tokenId: number,
   eventCount: Record<string, number>
 ) {
+  if (!OWNER_PRIVATE_KEY) {
+    throw new Error("OWNER_PRIVATE_KEY not defined");
+  }
+  const wallet = new ethers.Wallet(OWNER_PRIVATE_KEY!);
+  const signer = wallet.connect(provider);
+  const ownerContract = contract.connect(signer);
   const hosts = Object.keys(eventCount);
   const count = hosts.map((host) => eventCount[host]);
-  await contract.setUserFileEventCount(
-    tokenId,
-    hosts.map(ethers.utils.formatBytes32String),
-    count
-  );
+  await ownerContract.setUserFileEventCount(tokenId, hosts, count);
 }

@@ -1,16 +1,17 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract UserFileAccess is Ownable {
     struct EventCount {
-        bytes host;
+        string host;
         uint256 count;
     }
 
-    uint256 defaultEventPrice = 0.1 ether;
+    uint256 defaultEventPrice = 0.001 ether;
     mapping(uint256 => EventCount[]) userFileEventCount;
-    mapping(bytes => uint256) hostEventPrice;
+    mapping(string => uint256) hostEventPrice;
 
     mapping(uint256 => mapping(address => bool)) userFileAccess;
 
@@ -50,13 +51,15 @@ contract UserFileAccess is Ownable {
     }
 
     function setHostEventPrice(
-        bytes memory _host,
+        string calldata _host,
         uint256 _price
-    ) public onlyOwner {
+    ) external onlyOwner {
         hostEventPrice[_host] = _price;
     }
 
-    function getHostPrice(bytes memory _host) public view returns (uint256) {
+    function getHostPrice(
+        string calldata _host
+    ) external view returns (uint256) {
         uint256 price = hostEventPrice[_host];
         if (price == 0) {
             return defaultEventPrice;
@@ -67,7 +70,7 @@ contract UserFileAccess is Ownable {
 
     function setUserFileEventCount(
         uint256 _tokenId,
-        bytes[] calldata _hosts,
+        string[] calldata _hosts,
         uint256[] calldata _counts
     ) external onlyOwner {
         require(_hosts.length == _counts.length);
@@ -85,7 +88,7 @@ contract UserFileAccess is Ownable {
         EventCount[] storage _eventsCount = userFileEventCount[_tokenId];
         for (uint i = 0; i < _eventsCount.length; i++) {
             EventCount storage _eventCount = _eventsCount[i];
-            _total += _eventCount.count * getHostPrice(_eventCount.host);
+            _total += _eventCount.count * this.getHostPrice(_eventCount.host);
         }
         return _total;
     }

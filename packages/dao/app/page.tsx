@@ -45,7 +45,6 @@ export default async function Home() {
       </Card>
       <div className="flex flex-1 justify-between">
         <Card className="w-2/5 max-h-full flex flex-col">
-          {/* <h2 className="text-2xl">Hosts</h2> */}
           <Hosts hosts={hostEventsCount} />
         </Card>
         <Card className="w-2/5">

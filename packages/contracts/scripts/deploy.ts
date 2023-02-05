@@ -4,26 +4,45 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
-import hre from "hardhat";
+import hre, { ethers } from "hardhat";
 import { ERC721UserFile__factory } from "../types";
 
-export async function deployContracts() {
-  const ERC721UserFileFactory: ERC721UserFile__factory =
-    await hre.ethers.getContractFactory("ERC721UserFile");
+const util = require("util");
+const request = util.promisify(require("request"));
 
-  const ERC721UserFile = ERC721UserFileFactory.deploy();
-  (await ERC721UserFile).deployed();
-  return ERC721UserFile;
+async function callRpc(method: any) {
+  var options = {
+    method: "POST",
+    url: "https://api.hyperspace.node.glif.io/rpc/v1",
+    // url: "http://localhost:1234/rpc/v0",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      method: method,
+      id: 1,
+    }),
+  };
+  const res = await request(options);
+  return JSON.parse(res.body).result;
 }
 
 async function main() {
   const [signer] = await hre.ethers.getSigners();
-  const ERC721UserFile = await deployContracts();
+  console.log("Deploying contracts with the account:", signer.address);
+
+  const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
+
+  const ERC721UserFileFactory: ERC721UserFile__factory =
+    await hre.ethers.getContractFactory("ERC721UserFile");
+  const ERC721UserFile = await ERC721UserFileFactory.deploy({
+    maxPriorityFeePerGas: ethers.BigNumber.from(priorityFee),
+  });
+  await ERC721UserFile.deployed();
   console.log(
     `ERC721UserFile deployed to ${ERC721UserFile.address} by ${signer.address}`
   );
-
-  const userAddress = "0x5fbdb2315678afecb367f032d93f642f64180aa3";
 }
 
 // We recommend this pattern to be able to use async/await everywhere

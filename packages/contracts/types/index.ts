@@ -28,11 +28,7 @@ export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
 export type { ERC721UserFile } from "./contracts/ERC721UserFile";
 export { ERC721UserFile__factory } from "./factories/contracts/ERC721UserFile__factory";
-export type { Lock } from "./contracts/Lock";
-export { Lock__factory } from "./factories/contracts/Lock__factory";
-export type { UserFile } from "./contracts/UserFile";
-export { UserFile__factory } from "./factories/contracts/UserFile__factory";
+export type { SimpleCoin } from "./contracts/SimpleCoin";
+export { SimpleCoin__factory } from "./factories/contracts/SimpleCoin__factory";
 export type { UserFileAccess } from "./contracts/UserFileAccess";
 export { UserFileAccess__factory } from "./factories/contracts/UserFileAccess__factory";
-export type { UserFileFactory } from "./contracts/UserFileFactory";
-export { UserFileFactory__factory } from "./factories/contracts/UserFileFactory__factory";

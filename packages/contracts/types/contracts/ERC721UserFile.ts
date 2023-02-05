@@ -38,7 +38,7 @@ export interface ERC721UserFileInterface extends utils.Interface {
     "balanceOf(address)": FunctionFragment;
     "exists(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "getHostPrice(bytes)": FunctionFragment;
+    "getHostPrice(string)": FunctionFragment;
     "getMultipleUserFilePrice(uint256[])": FunctionFragment;
     "getUserFilePrice(uint256)": FunctionFragment;
     "hasUserFileAccess(uint256)": FunctionFragment;
@@ -51,8 +51,8 @@ export interface ERC721UserFileInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
-    "setHostEventPrice(bytes,uint256)": FunctionFragment;
-    "setUserFileEventCount(uint256,bytes[],uint256[])": FunctionFragment;
+    "setHostEventPrice(string,uint256)": FunctionFragment;
+    "setUserFileEventCount(uint256,string[],uint256[])": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -131,7 +131,7 @@ export interface ERC721UserFileInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getHostPrice",
-    values: [PromiseOrValue<BytesLike>]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "getMultipleUserFilePrice",
@@ -186,13 +186,13 @@ export interface ERC721UserFileInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setHostEventPrice",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+    values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "setUserFileEventCount",
     values: [
       PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BytesLike>[],
+      PromiseOrValue<string>[],
       PromiseOrValue<BigNumberish>[]
     ]
   ): string;
@@ -475,7 +475,7 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<[string]>;
 
     getHostPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -541,14 +541,14 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<ContractTransaction>;
 
     setHostEventPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       _price: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     setUserFileEventCount(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _hosts: PromiseOrValue<BytesLike>[],
+      _hosts: PromiseOrValue<string>[],
       _counts: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -638,7 +638,7 @@ export interface ERC721UserFile extends BaseContract {
   ): Promise<string>;
 
   getHostPrice(
-    _host: PromiseOrValue<BytesLike>,
+    _host: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -704,14 +704,14 @@ export interface ERC721UserFile extends BaseContract {
   ): Promise<ContractTransaction>;
 
   setHostEventPrice(
-    _host: PromiseOrValue<BytesLike>,
+    _host: PromiseOrValue<string>,
     _price: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   setUserFileEventCount(
     _tokenId: PromiseOrValue<BigNumberish>,
-    _hosts: PromiseOrValue<BytesLike>[],
+    _hosts: PromiseOrValue<string>[],
     _counts: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -799,7 +799,7 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<string>;
 
     getHostPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -863,14 +863,14 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<void>;
 
     setHostEventPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       _price: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setUserFileEventCount(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _hosts: PromiseOrValue<BytesLike>[],
+      _hosts: PromiseOrValue<string>[],
       _counts: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
@@ -1016,7 +1016,7 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<BigNumber>;
 
     getHostPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1082,14 +1082,14 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<BigNumber>;
 
     setHostEventPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       _price: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setUserFileEventCount(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _hosts: PromiseOrValue<BytesLike>[],
+      _hosts: PromiseOrValue<string>[],
       _counts: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1180,7 +1180,7 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getHostPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1246,14 +1246,14 @@ export interface ERC721UserFile extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setHostEventPrice(
-      _host: PromiseOrValue<BytesLike>,
+      _host: PromiseOrValue<string>,
       _price: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setUserFileEventCount(
       _tokenId: PromiseOrValue<BigNumberish>,
-      _hosts: PromiseOrValue<BytesLike>[],
+      _hosts: PromiseOrValue<string>[],
       _counts: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

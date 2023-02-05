@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { UserFile } from "@analytics/shared/types";
 import {
   Accordion,
@@ -11,10 +11,27 @@ import {
   TableCell,
   TableRow,
 } from "@analytics/ui";
+import { getUserFilePrice } from "@analytics/contracts";
+import { BigNumber, ethers } from "ethers";
 
 const Files: React.FC<{
   files: UserFile[];
 }> = ({ files }) => {
+  const [filePrice, setFilePrice] = useState<Record<number, string>>({});
+
+  useEffect(() => {
+    files.forEach(async (file) => {
+      if (filePrice[file.tokenId]) {
+        return;
+      }
+      const price = await getUserFilePrice(file.tokenId);
+      setFilePrice((prices) => ({
+        ...prices,
+        [file.tokenId]: ethers.utils.formatEther(price),
+      }));
+    });
+  }, [files]);
+
   return (
     <div className="mt-4">
       <div className="shadow rounded-lg overflow-auto max-h-[540px]">
@@ -36,6 +53,9 @@ const Files: React.FC<{
                       0
                     )}
                   </b>
+                </span>
+                <span className="w-1/4">
+                  Price: <b>{filePrice[file.tokenId] ?? "-"} tFil</b>
                 </span>
               </div>
             </AccordionButton>

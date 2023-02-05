@@ -11,23 +11,23 @@ const CHAIN_ID = Number.parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || "31337");
 const Login: React.FC<{ text?: string }> = ({
   text = "Sign-In with Wallet",
 }) => {
-  const { walletConnected, address, loggedIn } = useAuth();
+  const { loggedIn } = useAuth();
   const { login, nonce, loading: isLoadingLogin } = useLogin();
   const { isConnected } = useAccount();
   const { connectAsync, isLoading: isLoadingConnect } = useConnect({
     connector: new InjectedConnector(),
   });
+  const { address } = useAccount();
   const { chain } = useNetwork();
-  const {
-    error,
-    isLoading: isLoadingSwitch,
-    switchNetworkAsync,
-  } = useSwitchNetwork();
+  const { isLoading: isLoadingSwitch, switchNetworkAsync } = useSwitchNetwork();
 
   async function signin() {
     try {
+      let newAddress, newChainId;
       if (!isConnected) {
-        await connectAsync();
+        const result = await connectAsync();
+        newAddress = result.account;
+        newChainId = result.chain.id;
       }
 
       if (switchNetworkAsync && chain?.id !== CHAIN_ID) {
@@ -35,7 +35,7 @@ const Login: React.FC<{ text?: string }> = ({
       }
 
       if (!loggedIn) {
-        await login();
+        await login(newAddress ?? address, newChainId ?? chain?.id);
       }
     } catch (error) {
       console.log(error);
