@@ -39,7 +39,6 @@ export interface UserFileAccessInterface extends utils.Interface {
     "getMultipleUserFilePrice(uint256[])": FunctionFragment;
     "getUserFilePrice(uint256)": FunctionFragment;
     "getUserFilesAccess(address)": FunctionFragment;
-    "hasAccess(uint256)": FunctionFragment;
     "hasAccess(uint256,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "name()": FunctionFragment;
@@ -72,8 +71,7 @@ export interface UserFileAccessInterface extends utils.Interface {
       | "getMultipleUserFilePrice"
       | "getUserFilePrice"
       | "getUserFilesAccess"
-      | "hasAccess(uint256)"
-      | "hasAccess(uint256,address)"
+      | "hasAccess"
       | "isApprovedForAll"
       | "name"
       | "owner"
@@ -131,11 +129,7 @@ export interface UserFileAccessInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "hasAccess(uint256)",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "hasAccess(uint256,address)",
+    functionFragment: "hasAccess",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -249,14 +243,7 @@ export interface UserFileAccessInterface extends utils.Interface {
     functionFragment: "getUserFilesAccess",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "hasAccess(uint256)",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "hasAccess(uint256,address)",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "hasAccess", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -464,12 +451,7 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    "hasAccess(uint256)"(
-      _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    "hasAccess(uint256,address)"(
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -612,12 +594,7 @@ export interface UserFileAccess extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  "hasAccess(uint256)"(
-    _tokenId: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  "hasAccess(uint256,address)"(
+  hasAccess(
     _tokenId: PromiseOrValue<BigNumberish>,
     _user: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -760,12 +737,7 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    "hasAccess(uint256)"(
-      _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    "hasAccess(uint256,address)"(
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -962,12 +934,7 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "hasAccess(uint256)"(
-      _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    "hasAccess(uint256,address)"(
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1111,12 +1078,7 @@ export interface UserFileAccess extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "hasAccess(uint256)"(
-      _tokenId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    "hasAccess(uint256,address)"(
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides

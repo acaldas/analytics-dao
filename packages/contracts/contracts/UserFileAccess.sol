@@ -112,12 +112,6 @@ abstract contract UserFileAccess is Ownable, ERC721Enumerable {
             userFileAccess[_tokenId][_user] || this.ownerOf(_tokenId) == _user;
     }
 
-    function hasAccess(uint256 _tokenId) external view returns (bool) {
-        return
-            userFileAccess[_tokenId][msg.sender] ||
-            this.ownerOf(_tokenId) == msg.sender;
-    }
-
     function getUserFilesAccess(
         address _user
     ) external view returns (uint256[] memory) {
