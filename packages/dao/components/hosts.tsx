@@ -15,12 +15,12 @@ interface IProps {
 }
 
 const Hosts: React.FC<IProps> = ({ hosts }) => (
-  <Table className="mt-4">
+  <Table className="block mt-4">
     <TableHead>
       <TableHeadCell className="w-2/3 text-2xl">Host</TableHeadCell>
       <TableHeadCell className="text-2xl">Events</TableHeadCell>
     </TableHead>
-    <TableBody>
+    <TableBody className="max-h-[90%]">
       {hosts.map((row, i) => (
         <TableRow i={i} key={row.hostName}>
           <TableCell className="w-2/3">
@@ -31,7 +31,11 @@ const Hosts: React.FC<IProps> = ({ hosts }) => (
               {row.hostName.split("www.").pop()}
             </a>
           </TableCell>
-          <TableCell>{row.count}</TableCell>
+          <TableCell>
+            <div className="flex justify-between">
+              <span className="pl-1">{row.count}</span>
+            </div>
+          </TableCell>
         </TableRow>
       ))}
     </TableBody>

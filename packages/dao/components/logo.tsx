@@ -14,7 +14,11 @@ const Logo: React.FC<{ size: number; title?: boolean }> = ({ size, title }) => {
         priority
       />
       {title && (
-        <h1 className={`ml-4 text-[42px] ${comfortaa.className}`}>LytDAO</h1>
+        <h1
+          className={`ml-4 text-[42px] drop-shadow-lg ${comfortaa.className}`}
+        >
+          LytDAO
+        </h1>
       )}
     </div>
   );

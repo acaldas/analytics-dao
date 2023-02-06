@@ -6,17 +6,23 @@ import {
   Accordion,
   AccordionButton,
   AccordionPanel,
+  Button,
   Table,
   TableBody,
   TableCell,
   TableRow,
 } from "@analytics/ui";
 import { getUserFilePrice } from "@analytics/contracts";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
+import EventsCount from "./events-count";
+
+type File = UserFile & { selected?: boolean; owned?: boolean };
 
 const Files: React.FC<{
-  files: UserFile[];
-}> = ({ files }) => {
+  files: Array<File>;
+  noHosts?: boolean;
+  onSelect?: (file: File) => void;
+}> = ({ files, noHosts, onSelect }) => {
   const [filePrice, setFilePrice] = useState<Record<number, string>>({});
 
   useEffect(() => {
@@ -37,15 +43,17 @@ const Files: React.FC<{
       <div className="shadow rounded-lg overflow-auto max-h-[540px]">
         {files.map((file) => (
           <Accordion key={file.tokenId} className="">
-            <AccordionButton className="">
-              <div className="w-full flex">
-                <b className="w-1/4 text-left pl-5">
-                  {new Date(file.timestamp).toLocaleDateString()}
+            <AccordionButton className="" noChevron={onSelect !== undefined}>
+              <div className="w-full flex items-center justify-between text-sm">
+                <b className="text-left pl-5">
+                  {new Date(file.timestamp).toLocaleDateString("en-US")}
                 </b>
-                <span className="w-2/4 mx-6">
-                  Hosts: <b>{file.eventsCount.length}</b>
-                </span>
-                <span className="w-1/4">
+                {!noHosts && (
+                  <span className="mx-6">
+                    Hosts: <b>{file.eventsCount.length}</b>
+                  </span>
+                )}
+                <span className="">
                   Events:{" "}
                   <b>
                     {file.eventsCount.reduce(
@@ -54,29 +62,34 @@ const Files: React.FC<{
                     )}
                   </b>
                 </span>
-                <span className="w-1/4">
+                <span className="">
                   Price: <b>{filePrice[file.tokenId] ?? "-"} tFil</b>
                 </span>
+                {file.selected !== undefined && (
+                  <span className="pl-2">
+                    {file.owned ? (
+                      <span>Owned</span>
+                    ) : (
+                      <Button
+                        className="text-xs"
+                        style={{ padding: "2px 6px" }}
+                        onClick={(e) => {
+                          onSelect?.(file);
+                          e.preventDefault();
+                        }}
+                      >
+                        {file.selected ? "Remove" : "Select"}
+                      </Button>
+                    )}
+                  </span>
+                )}
               </div>
             </AccordionButton>
             <AccordionPanel className="bg-lighter">
-              <Table>
-                <TableBody className="max-h-[200px]">
-                  {file.eventsCount.map((row, i) => (
-                    <TableRow i={i} key={row.hostName}>
-                      <TableCell className="w-3/4">
-                        <a
-                          href={`http://${row.hostName}`}
-                          className="underline block whitespace-nowrap text-ellipsis overflow-hidden w-full"
-                        >
-                          {row.hostName.split("www.").pop()}
-                        </a>
-                      </TableCell>
-                      <TableCell>{row.count}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <EventsCount
+                eventsCount={file.eventsCount}
+                className="max-h-[300px]"
+              />
             </AccordionPanel>
           </Accordion>
         ))}

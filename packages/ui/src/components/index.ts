@@ -5,6 +5,7 @@ export { default as Dropdown } from "./dropdown";
 export { default as EventList } from "./event-list";
 export { default as Input } from "./input";
 export { default as Profile } from "./profile";
+export { default as Settings } from "./settings";
 export { default as Spinner } from "./spinner";
 export { default as Toggle } from "./toggle";
 export * from "./table";

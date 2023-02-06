@@ -4,7 +4,9 @@ import useAnalytics from "hooks/useAnalytics";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 
-const Upload: React.FC = () => {
+const Upload: React.FC<{ onUpload: (tokenId: number) => void }> = ({
+  onUpload,
+}) => {
   const { isConnected } = useAccount();
   const analytics = useAnalytics();
   const [loading, setLoading] = useState(false);
@@ -18,8 +20,11 @@ const Upload: React.FC = () => {
       },
       body: JSON.stringify({ ...analytics }),
     });
-    console.log(await result.json());
-    setLoading(false);
+
+    setTimeout(async () => {
+      setLoading(false);
+      onUpload((await result.json()).tokenId);
+    }, 1000);
   };
 
   return (
@@ -29,7 +34,7 @@ const Upload: React.FC = () => {
       onClick={uploadAnalytics}
       className="flex items-center"
     >
-      <span>Upload</span>
+      <span>Upload {analytics?.events.length ?? 0} events</span>
       {loading && (
         <div className="ml-4">
           <Spinner />

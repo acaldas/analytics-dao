@@ -9,20 +9,22 @@ export const Accordion: React.FC<React.HTMLProps<HTMLDivElement>> = ({
 
 export const AccordionButton = React.forwardRef<
   HTMLButtonElement,
-  React.HTMLProps<HTMLButtonElement>
->(({ as, children, ...props }, ref) => (
+  React.HTMLProps<HTMLButtonElement> & { noChevron?: boolean }
+>(({ as, children, noChevron, ...props }, ref) => (
   <Disclosure.Button
     ref={ref}
     {...props}
     className={`border-b border-stone-300 w-full px-2 py-4 bg-background hover:bg-lighter ui-open:bg-[rgba(255,255,255,0.7)] transition-colors ${props.className}`}
   >
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       {children}
-      <ChevronRightIcon
-        width={20}
-        height={20}
-        className="rotate-[-90deg] ui-open:rotate-90 ui-open:transform"
-      />
+      {!noChevron && (
+        <ChevronRightIcon
+          width={25}
+          height={25}
+          className="ui-open:rotate-90 ui-open:transform"
+        />
+      )}
     </div>
   </Disclosure.Button>
 ));

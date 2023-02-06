@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx"
   },
-  "include": ["src"],
+  "include": ["src", "../ui/src/components/settings.tsx"],
   "references": [
     { "path": "./tsconfig.node.json" },
     { "path": "../shared" },

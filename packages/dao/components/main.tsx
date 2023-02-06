@@ -5,7 +5,7 @@ const Main: React.FC<
 > = (props) => (
   <main
     {...props}
-    className={`max-w-screen-2xl flex-1 rounded px-12 py-6 ${props.className}`}
+    className={`max-w-screen-2xl h-full flex-1 rounded px-12 py-6 ${props.className}`}
   />
 );
 

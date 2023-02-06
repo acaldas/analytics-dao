@@ -14,7 +14,7 @@ function App() {
         <Button className="px-0 py-0">
           <a
             className="px-4 py-2"
-            href="http://localhost:3000/"
+            href="http://localhost:3000/upload"
             target="_blank"
           >
             Upload analytics

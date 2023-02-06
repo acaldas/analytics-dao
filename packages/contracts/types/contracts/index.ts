@@ -2,5 +2,4 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { ERC721UserFile } from "./ERC721UserFile";
-export type { SimpleCoin } from "./SimpleCoin";
 export type { UserFileAccess } from "./UserFileAccess";

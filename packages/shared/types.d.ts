@@ -60,6 +60,8 @@ export type LighthouseFile = {
   size: string | number;
 };
 
+export type HostEventsCount = { id: number; hostName: string; count: number };
+
 export type UserFile = Omit<UserEventsFile, "timestamp"> & {
   eventsCount: UserEventsFileHostCount[];
 } & { timestamp: string };

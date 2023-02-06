@@ -44,6 +44,21 @@ export async function mintUserFile(to: string, metadataCId: string) {
   return tokenId?.toNumber();
 }
 
+export async function setUserFileEventCount(
+  tokenId: number,
+  eventCount: Record<string, number>
+) {
+  if (!OWNER_PRIVATE_KEY) {
+    throw new Error("OWNER_PRIVATE_KEY not defined");
+  }
+  const wallet = new ethers.Wallet(OWNER_PRIVATE_KEY!);
+  const signer = wallet.connect(provider);
+  const ownerContract = contract.connect(signer);
+  const hosts = Object.keys(eventCount);
+  const count = hosts.map((host) => eventCount[host]);
+  await ownerContract.setUserFileEventCount(tokenId, hosts, count);
+}
+
 export async function getUserTokenIds(user: string) {
   const balance = await contract.balanceOf(user);
   if (balance.isZero()) {
@@ -63,17 +78,23 @@ export async function getUserFilePrice(tokenId: number) {
   return contract.getUserFilePrice(tokenId);
 }
 
-export async function setUserFileEventCount(
-  tokenId: number,
-  eventCount: Record<string, number>
+export async function getMultipleUserFilePrice(tokenIds: number[]) {
+  return contract.getMultipleUserFilePrice(tokenIds);
+}
+
+export async function addMultipleUserFileAccess(
+  tokenIds: number[],
+  value: ethers.BigNumber,
+  signer: ethers.Signer
 ) {
-  if (!OWNER_PRIVATE_KEY) {
-    throw new Error("OWNER_PRIVATE_KEY not defined");
-  }
-  const wallet = new ethers.Wallet(OWNER_PRIVATE_KEY!);
-  const signer = wallet.connect(provider);
-  const ownerContract = contract.connect(signer);
-  const hosts = Object.keys(eventCount);
-  const count = hosts.map((host) => eventCount[host]);
-  await ownerContract.setUserFileEventCount(tokenId, hosts, count);
+  const userContract = contract.connect(signer);
+  return userContract
+    .connect(signer)
+    .addMultipleUserFileAccess(tokenIds, { value });
+}
+
+export async function geUserFilesAccess(
+  user: string
+): Promise<ethers.BigNumber[]> {
+  return contract.getUserFilesAccess(user);
 }

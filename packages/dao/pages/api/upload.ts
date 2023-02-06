@@ -49,7 +49,6 @@ async function getUserUploads(
   response: NextApiResponse
 ) {
   try {
-    console.log("OLA", request.session.siwe);
     const userAddress = request.session.siwe!.address;
     const tokenIds = await getUserTokenIds(userAddress);
     const uploads = await fetchUserUploads(tokenIds);
@@ -125,7 +124,6 @@ export default withIronSessionApiRoute(async function (
     );
 
     setUserFileEventCount(tokenId, eventCount);
-
     response.status(200).json({ status: "success", result });
   } catch (error) {
     if (error instanceof ApiError) {

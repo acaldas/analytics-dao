@@ -32,7 +32,7 @@ export default function Settings({
     [settings]
   );
   const [location, setLocation] = useState<string | undefined>();
-
+  console.log(settings);
   useEffect(() => {
     if (settings.location.enabled && !location) {
       navigator.geolocation.getCurrentPosition((position) => {

@@ -12,7 +12,6 @@ contract ERC721UserFile is
     ERC721,
     ERC721Enumerable,
     ERC721URIStorage,
-    Ownable,
     UserFileAccess
 {
     constructor() ERC721("LytUserFile", "LytF") {}

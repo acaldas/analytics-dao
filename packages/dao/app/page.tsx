@@ -4,51 +4,51 @@ import Upload from "components/upload";
 import { fetchFiles, fetchHostEventsCount } from "@analytics/db";
 import Hosts from "components/hosts";
 import Uploads from "components/uploads";
-import Logo from "components/logo";
 import Files from "components/files";
 import Card from "@analytics/ui/src/components/card";
 import { getAddress } from "hooks/withIronSession";
 import Login from "components/login";
-
-const Profile = dynamic(() => import("../components/profile"), { ssr: false });
+import Link from "next/link";
 
 export default async function Home() {
   const [address, hostEventsCount, files] = await Promise.all([
     getAddress(),
     fetchHostEventsCount(),
-    fetchFiles().then((files) =>
+    fetchFiles(10).then((files) =>
       files.map((file) => ({ ...file, timestamp: file.timestamp.toString() }))
     ),
   ]);
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="mb-4 flex justify-between">
-        <Logo size={100} title />
-        <div>
-          <Profile />
-        </div>
-      </div>
+    <div className="h-full overflow-hidden flex flex-col">
       <Card className="w-1/2">
         <div className="flex items-center">
-          <h2 className="text-2xl mr-8">My Uploads</h2>
-          <Upload />
+          <p>
+            Get access to{" "}
+            <Link href="/files">
+              <span className="underline font-bold">user analytics</span>
+            </Link>
+            <span className="px-2">or</span>
+            <Link href="/upload">
+              <span className="underline font-bold">upload your data</span>
+            </Link>{" "}
+          </p>
         </div>
-        {address ? (
+        {/* {address ? (
           <Suspense fallback={<p>Loading uploads...</p>}>
             {/* @ts-expect-error Async Server Component */}
-            <Uploads address={address} />
-          </Suspense>
-        ) : (
-          <Login text="Sign with wallet to see your uploads" />
-        )}
+        {/* <Uploads address={address} />
+          </Suspense> */}
+        {/* ) : ( */}
+        {/* <Login text="Sign with wallet to see your uploads" /> */}
+        {/* )} } */}
       </Card>
-      <div className="flex flex-1 justify-between">
-        <Card className="w-2/5 max-h-full flex flex-col">
+      <div className="flex flex-1 justify-between items-stretch overflow-hidden gap-8">
+        <Card className="flex-1 max-h-full flex flex-col overflow-hidden">
           <Hosts hosts={hostEventsCount} />
         </Card>
-        <Card className="w-2/5">
-          <h2 className="text-2xl">All files</h2>
+        <Card className="flex-1">
+          <h2 className="text-2xl font-bold">Latest Uploads</h2>
           <Files files={files} />
         </Card>
       </div>

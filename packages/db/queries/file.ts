@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export async function fetchFiles() {
+export async function fetchFiles(take?: number) {
   const result = await prisma.userEventsFile.findMany({
     include: {
       eventsCount: {
@@ -13,6 +13,7 @@ export async function fetchFiles() {
     orderBy: {
       tokenId: "desc",
     },
+    take,
   });
   return result;
 }

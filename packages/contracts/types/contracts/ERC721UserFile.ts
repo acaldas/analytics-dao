@@ -41,7 +41,8 @@ export interface ERC721UserFileInterface extends utils.Interface {
     "getHostPrice(string)": FunctionFragment;
     "getMultipleUserFilePrice(uint256[])": FunctionFragment;
     "getUserFilePrice(uint256)": FunctionFragment;
-    "hasUserFileAccess(uint256)": FunctionFragment;
+    "getUserFilesAccess(address)": FunctionFragment;
+    "hasAccess(uint256,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(address,string)": FunctionFragment;
     "name()": FunctionFragment;
@@ -77,7 +78,8 @@ export interface ERC721UserFileInterface extends utils.Interface {
       | "getHostPrice"
       | "getMultipleUserFilePrice"
       | "getUserFilePrice"
-      | "hasUserFileAccess"
+      | "getUserFilesAccess"
+      | "hasAccess"
       | "isApprovedForAll"
       | "mint"
       | "name"
@@ -142,8 +144,12 @@ export interface ERC721UserFileInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "hasUserFileAccess",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "getUserFilesAccess",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasAccess",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
@@ -264,9 +270,10 @@ export interface ERC721UserFileInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "hasUserFileAccess",
+    functionFragment: "getUserFilesAccess",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "hasAccess", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -489,8 +496,14 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    hasUserFileAccess(
+    getUserFilesAccess(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber[]]>;
+
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -652,8 +665,14 @@ export interface ERC721UserFile extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  hasUserFileAccess(
+  getUserFilesAccess(
+    _user: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber[]>;
+
+  hasAccess(
     _tokenId: PromiseOrValue<BigNumberish>,
+    _user: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -813,8 +832,14 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    hasUserFileAccess(
+    getUserFilesAccess(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber[]>;
+
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -1030,8 +1055,14 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    hasUserFileAccess(
+    getUserFilesAccess(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1194,8 +1225,14 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    hasUserFileAccess(
+    getUserFilesAccess(
+      _user: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hasAccess(
       _tokenId: PromiseOrValue<BigNumberish>,
+      _user: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

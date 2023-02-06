@@ -28,7 +28,5 @@ export type { IERC165 } from "./@openzeppelin/contracts/utils/introspection/IERC
 export { IERC165__factory } from "./factories/@openzeppelin/contracts/utils/introspection/IERC165__factory";
 export type { ERC721UserFile } from "./contracts/ERC721UserFile";
 export { ERC721UserFile__factory } from "./factories/contracts/ERC721UserFile__factory";
-export type { SimpleCoin } from "./contracts/SimpleCoin";
-export { SimpleCoin__factory } from "./factories/contracts/SimpleCoin__factory";
 export type { UserFileAccess } from "./contracts/UserFileAccess";
 export { UserFileAccess__factory } from "./factories/contracts/UserFileAccess__factory";

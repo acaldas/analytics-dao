@@ -32,8 +32,17 @@ describe("UserFile", function () {
       await ERC721UserFile.mint(acc1.address, "");
 
       await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
-      const defaultPrice = ethers.utils.parseEther("0.3");
+      const defaultPrice = ethers.utils.parseEther("0.003");
       expect(await ERC721UserFile.getUserFilePrice(0)).to.equal(defaultPrice);
+    });
+
+    it("Should prevent user access", async function () {
+      const { ERC721UserFile } = await loadFixture(deployContracts);
+      const [, acc1, acc2] = await ethers.getSigners();
+      await ERC721UserFile.mint(acc1.address, "");
+
+      expect(await ERC721UserFile.hasAccess(0, acc1.address)).to.equal(true);
+      expect(await ERC721UserFile.hasAccess(0, acc2.address)).to.equal(false);
     });
 
     it("Should add user access", async function () {
@@ -43,11 +52,29 @@ describe("UserFile", function () {
 
       await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       await ERC721UserFile.connect(acc2).addUserFileAccess(0, {
-        value: ethers.utils.parseEther("0.3"),
+        value: ethers.utils.parseEther("0.003"),
       });
-      expect(await ERC721UserFile.connect(acc2).hasUserFileAccess(0)).to.equal(
-        true
-      );
+      expect(await ERC721UserFile.hasAccess(0, acc2.address)).to.equal(true);
+    });
+
+    it("Should retrieve files that user has access", async function () {
+      const { ERC721UserFile } = await loadFixture(deployContracts);
+      const [, acc1, acc2, acc3] = await ethers.getSigners();
+      await ERC721UserFile.mint(acc1.address, "");
+
+      await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
+      await ERC721UserFile.connect(acc2).addUserFileAccess(0, {
+        value: ethers.utils.parseEther("0.003"),
+      });
+      expect(
+        (await ERC721UserFile.getUserFilesAccess(acc2.address)).length
+      ).to.equal(1);
+      expect(
+        (await ERC721UserFile.getUserFilesAccess(acc1.address)).length
+      ).to.equal(1);
+      expect(
+        (await ERC721UserFile.getUserFilesAccess(acc3.address)).length
+      ).to.equal(0);
     });
 
     it("Should prevent adding access before event count is set", async function () {
@@ -68,7 +95,7 @@ describe("UserFile", function () {
 
       await expect(
         ERC721UserFile.connect(acc2).addUserFileAccess(0, {
-          value: ethers.utils.parseEther("0.2"),
+          value: ethers.utils.parseEther("0.002"),
         })
       ).to.be.revertedWith("Not enough funds");
     });
@@ -79,7 +106,7 @@ describe("UserFile", function () {
       await ERC721UserFile.mint(acc1.address, "");
 
       const initialBalance = await acc1.getBalance();
-      const price = ethers.utils.parseEther("0.3");
+      const price = ethers.utils.parseEther("0.003");
 
       await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       await ERC721UserFile.connect(acc2).addUserFileAccess(0, {
@@ -96,8 +123,8 @@ describe("UserFile", function () {
 
       await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       await ERC721UserFile.setUserFileEventCount(1, ["host1", "host2"], [1, 1]);
-      const price1 = ethers.utils.parseEther("0.3");
-      const price2 = ethers.utils.parseEther("0.2");
+      const price1 = ethers.utils.parseEther("0.003");
+      const price2 = ethers.utils.parseEther("0.002");
       const total = await ERC721UserFile.getMultipleUserFilePrice([0, 1]);
       expect(total[1][0]).to.equal(price1);
       expect(total[1][1]).to.equal(price2);
@@ -112,8 +139,8 @@ describe("UserFile", function () {
 
       await ERC721UserFile.setUserFileEventCount(0, ["host1", "host2"], [1, 2]);
       await ERC721UserFile.setUserFileEventCount(1, ["host1", "host2"], [1, 1]);
-      const price1 = ethers.utils.parseEther("0.3");
-      const price2 = ethers.utils.parseEther("0.2");
+      const price1 = ethers.utils.parseEther("0.003");
+      const price2 = ethers.utils.parseEther("0.002");
 
       const initialBalance1 = await acc1.getBalance();
       const initialBalance2 = await acc2.getBalance();

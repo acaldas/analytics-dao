@@ -2,8 +2,9 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
-contract UserFileAccess is Ownable {
+abstract contract UserFileAccess is Ownable, ERC721Enumerable {
     struct EventCount {
         string host;
         uint256 count;
@@ -45,10 +46,6 @@ contract UserFileAccess is Ownable {
         uint256 _tokenId,
         uint256 _price
     ) internal virtual {}
-
-    function hasUserFileAccess(uint256 _tokenId) public view returns (bool) {
-        return userFileAccess[_tokenId][msg.sender];
-    }
 
     function setHostEventPrice(
         string calldata _host,
@@ -105,5 +102,37 @@ contract UserFileAccess is Ownable {
             _prices[i] = _price;
         }
         return (_total, _prices);
+    }
+
+    function hasAccess(
+        uint256 _tokenId,
+        address _user
+    ) external view returns (bool) {
+        return
+            userFileAccess[_tokenId][_user] || this.ownerOf(_tokenId) == _user;
+    }
+
+    function getUserFilesAccess(
+        address _user
+    ) external view returns (uint256[] memory) {
+        uint256 _totalSupply = this.totalSupply();
+        uint256[] memory _tokenIds = new uint256[](_totalSupply);
+        uint256 _index = 0;
+        for (uint i = 0; i < _totalSupply; i++) {
+            uint256 _tokenId = this.tokenByIndex(i);
+            if (
+                userFileAccess[_tokenId][_user] == true ||
+                this.ownerOf(_tokenId) == _user
+            ) {
+                _tokenIds[_index] = _tokenId;
+                _index++;
+            }
+        }
+
+        uint256[] memory result = new uint256[](_index);
+        for (uint i = 0; i < _index; i++) {
+            result[i] = _tokenIds[i];
+        }
+        return result;
     }
 }

@@ -10,8 +10,8 @@ import {
   AccordionButton,
   AccordionPanel,
   EventList,
+  Settings,
 } from "@analytics/ui";
-import Settings from "./settings";
 
 export default function Menu() {
   const [data, setData] = useState<ExtensionStorage>();

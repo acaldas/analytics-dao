@@ -1,9 +1,9 @@
 import { WagmiConfig, configureChains, createClient } from "wagmi";
-import { filecoinHyperspace } from "@wagmi/core/chains";
+import { filecoinHyperspace, hardhat } from "@wagmi/core/chains";
 import { publicProvider } from "wagmi/providers/public";
 
 const { provider, chains } = configureChains(
-  [filecoinHyperspace],
+  [filecoinHyperspace, hardhat],
   [publicProvider()]
 );
 
