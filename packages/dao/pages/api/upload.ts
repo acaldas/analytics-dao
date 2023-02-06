@@ -18,6 +18,8 @@ import { ExtensionEvent } from "@analytics/shared/types";
 
 const RPC_PROVIDER = process.env.RPC_PROVIDER;
 
+const ERC721_ADDRESS = process.env.ERC721_ADDRESS;
+
 const sign_auth_message = async (publicKey: string, privateKey: string) => {
   const provider = new ethers.providers.JsonRpcProvider(RPC_PROVIDER);
   const signer = new ethers.Wallet(privateKey, provider);
@@ -27,7 +29,40 @@ const sign_auth_message = async (publicKey: string, privateKey: string) => {
   return signedMessage;
 };
 
-const uploadEncrypted = async (payload: string) => {
+const applyAccessConditions = async (
+  cId: string,
+  publicKey: string,
+  signedMessage: string
+) => {
+  const conditions = [
+    {
+      id: 1,
+      chain: "Hyperspace",
+      method: "hasAccess",
+      contractAddress: ERC721_ADDRESS,
+      standardContractType: "Custom",
+      returnValueTest: {
+        comparator: "=",
+        value: true,
+      },
+      parameters: [":_tokenId"],
+      inputArrayType: [],
+      outputType: "bool",
+    },
+  ];
+  const aggregator = "([1])";
+
+  const response = await lighthouse.accessCondition(
+    publicKey,
+    cId,
+    signedMessage,
+    conditions,
+    aggregator
+  );
+  return response;
+};
+
+const uploadEncrypted = async (payload: string, applyAccess = false) => {
   const apiKey = process.env.LIGHTHOUSE_API_KEY;
   const publicKey = process.env.LIGHTHOUSE_PUBLIC_KEY || "";
   const privateKey = process.env.LIGHTHOUSE_PRIVATE_KEY || "";
@@ -41,6 +76,15 @@ const uploadEncrypted = async (payload: string) => {
     publicKey,
     signed_message
   );
+
+  if (applyAccess) {
+    const result = await applyAccessConditions(
+      response.data.Name,
+      publicKey,
+      signed_message
+    );
+  }
+
   return response;
 };
 
@@ -90,7 +134,7 @@ export default withIronSessionApiRoute(async function (
       throw new ApiError(400, "Invalid request");
     }
 
-    const file = await uploadEncrypted(JSON.stringify(events));
+    const file = await uploadEncrypted(JSON.stringify(events), true);
     if (file.error) {
       console.error(file.error);
       throw new ApiError(500, "File upload failed");

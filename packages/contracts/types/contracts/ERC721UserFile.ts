@@ -42,6 +42,7 @@ export interface ERC721UserFileInterface extends utils.Interface {
     "getMultipleUserFilePrice(uint256[])": FunctionFragment;
     "getUserFilePrice(uint256)": FunctionFragment;
     "getUserFilesAccess(address)": FunctionFragment;
+    "hasAccess(uint256)": FunctionFragment;
     "hasAccess(uint256,address)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "mint(address,string)": FunctionFragment;
@@ -79,7 +80,8 @@ export interface ERC721UserFileInterface extends utils.Interface {
       | "getMultipleUserFilePrice"
       | "getUserFilePrice"
       | "getUserFilesAccess"
-      | "hasAccess"
+      | "hasAccess(uint256)"
+      | "hasAccess(uint256,address)"
       | "isApprovedForAll"
       | "mint"
       | "name"
@@ -148,7 +150,11 @@ export interface ERC721UserFileInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "hasAccess",
+    functionFragment: "hasAccess(uint256)",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasAccess(uint256,address)",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -273,7 +279,14 @@ export interface ERC721UserFileInterface extends utils.Interface {
     functionFragment: "getUserFilesAccess",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "hasAccess", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "hasAccess(uint256)",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hasAccess(uint256,address)",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -501,7 +514,12 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    hasAccess(
+    "hasAccess(uint256)"(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    "hasAccess(uint256,address)"(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -670,7 +688,12 @@ export interface ERC721UserFile extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  hasAccess(
+  "hasAccess(uint256)"(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  "hasAccess(uint256,address)"(
     _tokenId: PromiseOrValue<BigNumberish>,
     _user: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -837,7 +860,12 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    hasAccess(
+    "hasAccess(uint256)"(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    "hasAccess(uint256,address)"(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1060,7 +1088,12 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    hasAccess(
+    "hasAccess(uint256)"(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    "hasAccess(uint256,address)"(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1230,7 +1263,12 @@ export interface ERC721UserFile extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    hasAccess(
+    "hasAccess(uint256)"(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "hasAccess(uint256,address)"(
       _tokenId: PromiseOrValue<BigNumberish>,
       _user: PromiseOrValue<string>,
       overrides?: CallOverrides
